@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 300vh;
+        }
+
+        .father {}
+
+        .lazy-loaded {
+            margin: 0 auto;
+            margin-top: 1000px;
+            width: 200px;
+            height: 100px;
+            background-color: rgb(218, 221, 52);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="father">
+        <div class="lazy-loaded"></div>
+    </div>
+    <script>
+        let io = new IntersectionObserver((entries) => {
+            console.log(entries)
+
+        });
+        let box = document.querySelector(".lazy-loaded");
+        console.dir(box)
+
+        // function query(selector) {
+        //     return Array.from(document.querySelectorAll(selector));
+        // }
+
+        // var observer = new IntersectionObserver(
+        //     function (changes) {
+        //         changes.forEach(function (change) {
+        //             var container = change.target;
+        //             var content = container.querySelector('template').content;
+        //             container.appendChild(content);
+        //             observer.unobserve(container);
+        //         });
+        //     }
+        // );
+
+        // query('.lazy-loaded').forEach(function (item) {
+        //     observer.observe(item);
+        // });
+    </script>
+</body>
+
+</html>

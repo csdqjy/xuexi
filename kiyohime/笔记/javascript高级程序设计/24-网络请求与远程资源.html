@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <SCript>
+        let xhr = new XMLHttpRequest()
+        // xhr.open("get", "example.txt", false);
+        // xhr.send(null);
+
+        // if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+        //     alert(xhr.responseText);
+        // } else {
+        //     alert("Request was unsuccessful: " + xhr.status);
+        // }
+
+        xhr.onreadystatechange = function () {
+           if (xhr.readyState == 4) {
+             try {
+               if (
+                 (xhr.status >= 200 && xhr.status < 300) ||
+                 xhr.status == 304
+               ) {
+                 alert(xhr.responseText);
+               } else {
+                 alert("Request was unsuccessful: " + xhr.status);
+               }
+             } catch (ex) {
+               // 假设由ontimeout处理
+             }
+           }
+         };
+
+         xhr.open("get", "timeout.php", true);
+         xhr.timeout = 1000; // 设置1秒超时
+         xhr.ontimeout = function () {
+           alert("Request did not return in a second.");
+         };
+         xhr.send(null);
+    </SCript>
+</body>
+
+</html>

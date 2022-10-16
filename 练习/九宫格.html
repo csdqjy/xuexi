@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+        ul {
+            position: relative;
+        }
+
+        ul li {
+            position: absolute;
+            width: 40px;
+            height: 80px;
+            background-color: aqua;
+            list-style: none;
+            transform-origin: bottom center;
+            /* transform: rotate(23deg); */
+        }
+    </style>
+    <style>
+        .wrapper {
+            width: 300px;
+            height: 300px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            align-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            border: 1px solid red;
+        }
+
+        .wrapperList {
+            flex: 1 0 auto;
+            width: 33%;
+            height: 33%;
+            box-sizing: border-box;
+            border: 1px solid red;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .active {
+            background-color: aqua;
+        }
+
+        .wrapperBtn {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- <div class="wrapperList"></div> -->
+    </div>
+
+    <script>
+        const jackpot = ['香风智乃', '清姬', '岛风', '拉菲', '独角兽', '小天城', '恶毒', '小赤城']
+        const order = [0, 1, 2, 5, 8, 7, 6, 3]
+        const obj = {}
+        const wrapper = document.querySelector('.wrapper')
+        const btnDiv = document.createElement('DIV')
+        let flag = false
+        let turns, prize, second;
+        let speed = 50
+
+        jackpot.forEach((item, index) => {
+            const div = document.createElement('DIV')
+            div.classList.add('wrapperList')
+            div.innerHTML = item
+            wrapper.appendChild(div)
+            if (index === 3) {
+                btnDiv.classList.add('wrapperList')
+                btnDiv.classList.add('wrapperBtn')
+                btnDiv.innerHTML = '抽奖'
+                wrapper.appendChild(btnDiv)
+            }
+            obj[item] = 0
+        })
+
+        btnDiv.addEventListener('click', function () {
+            if (flag) return
+            const wrapperList = document.querySelectorAll('.wrapperList')
+            flag = true
+            turns = randomFn(5, 8)
+            second = randomFn(4, 7)
+            prize = order[randomFn(0, 7)]
+            // if (obj[order[prize]] === 3) {
+            //     prize = order[randomFn(0, 7)]
+            // }
+            activeCb({
+                wrapperList,
+                turns,
+                prize,
+                speed,
+                second
+            })
+        })
+
+        function activeCb({
+            wrapperList,
+            turns,
+            prize,
+            speed,
+            second,
+            num = 0,
+        }) {
+            let count = 0
+            const interval = setInterval(() => {
+                wrapperList.forEach(item => {
+                    item.classList.remove('active')
+                })
+                wrapperList[order[num]].classList.add('active')
+                if (count === turns && order[num] === prize) {
+                    flag = false
+                    clearInterval(interval)
+                    return
+                }
+                num += 1
+                if (num === order.length) {
+                    num = 0
+                    count += 1
+                }
+                // speed = speed - 10
+                // if (speed <= 30) speed = 30
+                // clearInterval(interval)
+                // activeCb(wrapperList, turns, speed, num)
+            }, speed)
+        }
+
+        function randomFn(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min
+        }
+
+        function fn(a, b) {
+
+        }
+        let a = 0,
+            b = 0;
+        fn(b, a)
+    </script>
+</body>
+
+</html>

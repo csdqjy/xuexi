@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        .root {
+            position: relative;
+            overflow: hidden;
+            width: 100vw;
+            height: calc(100vh + 300px);
+            background-image: url(https://m.360buyimg.com/babel/jfs/t1/213440/11/12995/1203599/62149818Eeae5d962/cca160fc4bcb7e23.png);
+            background-size: 100% auto;
+            background-repeat: no-repeat;
+        }
+
+        .root img {
+            position: absolute;
+            top: 100vh;
+            height: 300px;
+            width: 100%;
+            z-index: -1;
+            object-position: bottom;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="root">
+        <img src="https://m.360buyimg.com/babel/jfs/t1/213440/11/12995/1203599/62149818Eeae5d962/cca160fc4bcb7e23.png"
+            alt="">
+    </div>
+</body>
+
+</html>

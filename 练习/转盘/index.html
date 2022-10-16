@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .content {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .turntable {
+            position: relative;
+            width: 580px;
+            height: 698px;
+            background-image: url('./img/转盘底.png');
+        }
+
+        .img1 {
+            display: block;
+            width: 460px;
+            height: 460px;
+            /* position: absolute; */
+            margin: 0 auto;
+            margin-top: 25px;
+            /* left: 50%; */
+            /* animation: turn 1s linear infinite; */
+            /* transform: rotate(0deg); */
+            /* transition: all 5s; */
+            /* animation: all 1s linear infinite; */
+
+        }
+
+        .img2 {
+            width: 140px;
+            height: 180px;
+            position: absolute;
+            top: 144px;
+            left: 50%;
+            transform: translateX(-50%);
+
+        }
+
+        @keyframes turn {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(90deg);
+            }
+
+            50% {
+                transform: rotate(180deg);
+            }
+
+            75% {
+                transform: rotate(270deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="turntable">
+            <img class="img1" src="./img/奖品转动部分.png" alt="">
+            <img class="img2" src="./img/指针.png" alt="">
+        </div>
+    </div>
+    <script>
+        let img1 = document.querySelector('.img1')
+        let img2 = document.querySelector('.img2')
+        let flag = true
+        let deg = 0
+        img2.onclick = function () {
+            if (flag) {
+                initState()
+                flag = false
+                setTimeout(() => {
+                    deg = random(10);
+                    img1.style.transition = `transform 5s`
+                    img1.style.transform = `rotate(${deg}deg)`
+                }, 20)
+                setTimeout(() => {
+                    flag = true
+                    fn()
+                }, 5200)
+            } else {
+                console.log('点击太快了')
+            }
+
+        }
+
+        function random(deg) {
+            return Math.floor((Math.random() * (360 * (deg + 1))) + (360 * deg))
+        }
+
+        function initState() {
+            img1.style.transition = `transform 0s`
+            img1.style.transform = 'rotate(0deg)'
+        }
+
+        function fn() {
+            let yu = deg % 360
+            let int = Math.ceil(yu / (360 / 5))
+            switch (int) {
+                case 5:
+                    console.log('电量')
+                    break;
+                case 4:
+                    console.log('实物')
+                    break;
+                case 3:
+                    console.log('谢谢参与')
+                    break;
+                case 2:
+                    console.log('优惠券')
+                    break;
+                case 1:
+                    console.log('京豆')
+                    break;
+                default:
+                    break
+            }
+        }
+    </script>
+</body>
+
+</html>

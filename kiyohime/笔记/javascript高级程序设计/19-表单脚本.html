@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="">
+        <input type="text">
+        <!-- 通用提交按钮 -->
+        <input type="submit" value="Submit Form">
+
+        <!-- 自定义提交按钮 -->
+        <button type="submit">Submit Form</button>
+
+        <!-- 图片按钮 -->
+        <input type="image" src="graphic.gif">
+        <!-- 通用重置按钮 -->
+        <input type="reset" value="Reset Form">
+
+        <!-- 自定义重置按钮 -->
+        <button type="reset">Reset Form</button>
+    </form>
+    <input type="text" size="25" maxlength="50" value="initial value">
+    <textarea rows="25" cols="5">initial value</textarea>
+    <input type="email" name="email">
+    <input type="url" name="homepage">
+    <br>
+    <input type="number" min="0" max="100" step="5" name="count">
+    <br>
+    <input type="text" pattern="\d+" name="count">
+    <br>
+    <select name="location" id="selLocation">
+        <option value="Sunnyvale, CA">Sunnyvale</option>
+        <option value="Los Angeles, CA">Los Angeles</option>
+        <option value="Mountain View, CA">Mountain View</option>
+        <option value="">China</option>
+        <option>Australia</option>
+    </select>
+    <script>
+        let textbox = document.forms[0].elements[0];
+        console.log(textbox)
+        // textbox.addEventListener("focus", (event) => {
+        //     let target = event.target;
+        //     if (target.style.backgroundColor != "red") {
+        //         target.style.backgroundColor = "yellow";
+        //     }
+        // });
+
+        // textbox.addEventListener("blur", (event) => {
+        //     let target = event.target;
+        //     target.style.backgroundColor = /[^\d]/.test(target.value) ? "red" : "";
+        // });
+
+        // textbox.addEventListener("change", (event) => {
+        //     let target = event.target;
+        //     target.style.backgroundColor = /[^\d]/.test(target.value) ? "red" : "";
+        // });
+
+        textbox.value = "Hello world!"
+
+        // 选择所有文本
+        textbox.setSelectionRange(0, textbox.value.length); // "Hello world!"
+
+        // 选择前3个字符
+        textbox.setSelectionRange(0, 3); // "Hel"
+
+        // 选择第4~6个字符
+        textbox.setSelectionRange(4, 7); // "o w"
+
+        textbox.addEventListener("keypress", (event) => {
+            if (!/\d/.test(String.fromCharCode(event.charCode)) &&
+                event.charCode > 9 &&
+                !event.ctrlKey) {
+                event.preventDefault();
+            }
+        });
+
+        textbox.addEventListener("paste", (event) => {
+            let text = event.clipboardData.getData('text');
+
+            if (!/^\d*$/.test(text)) {
+                event.preventDefault();
+            }
+        });
+
+        let num = [1, 2, 3, 4]
+
+        num = num.join('')
+        
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>月历</title>
+    <style>
+        /* .content {} */
+
+        .year {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .mouthly {
+            width: 32%;
+            margin: 30px 0;
+        }
+
+        .dayBox {
+            padding: 10px 10px;
+        }
+
+        .mouthTitle {
+            font-size: 25px;
+            padding-left: 20px;
+        }
+
+        .dayBox_day {
+            display: flex;
+        }
+
+        .dayBox_day>div {
+            box-sizing: border-box;
+            width: calc(100% /7);
+            text-align: center;
+            padding: 5px 0;
+        }
+
+        .dayBox_day>:nth-child(1),
+        .dayBox_day>:nth-child(7) {
+            color: red;
+        }
+
+        .dayBox_list {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .dayBox_list_item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            width: calc(100% /7);
+            height: 0;
+            padding: calc(100% /14) 0 calc(100% /14) 0;
+            /* padding: 5px 0; */
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .dayBox_list_item.select {
+            background: rgba(113, 234, 255, 0.315);
+            transition: all 0.3s;
+        }
+
+        .dayBox_list_item.noneClass {
+            cursor: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <input class="yearNum" type="number">
+        <button class="yearButton">年份</button>
+        <div class="year"></div>
+    </div>
+    <script>
+        let yearButton = document.querySelector('.yearButton')
+        let yearNum = document.querySelector('.yearNum')
+        let year = document.querySelector('.year')
+        yearNum.value = new Date().getFullYear();
+        const today = `${new Date().getFullYear()}-${new Date().getMonth()+1}-${new Date().getDate()}`
+
+        yearButton.addEventListener('click', () => {
+            let obj = pushMouth()
+            year.innerHTML = ''
+            for (let mouth in obj) {
+                // 添加月
+                let mouthly = document.createElement('DIV')
+                let mouthTitle = document.createElement('DIV')
+                mouthly.className = "mouthly";
+                mouthTitle.className = 'mouthTitle'
+                mouthTitle.innerHTML = `${mouth}月`
+                mouthly.appendChild(mouthTitle);
+                year.appendChild(mouthly);
+
+                // 添加头部日期
+                let dayBox = document.createElement('DIV')
+                let dayBox_day = document.createElement('DIV')
+                dayBox.className = 'dayBox'
+                dayBox_day.className = 'dayBox_day'
+                mouthly.appendChild(dayBox);
+                dayBox.appendChild(dayBox_day);
+                dayBox_day.innerHTML =
+                    "<div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div>"
+
+                // 添加每日
+                let dayBox_list = document.createElement('dayBox_list')
+                dayBox_list.className = 'dayBox_list'
+                dayBox.appendChild(dayBox_list);
+                obj[mouth].forEach((item) => {
+                    let dayBox_list_item = document.createElement('dayBox_list_item')
+                    dayBox_list_item.className = 'dayBox_list_item'
+                    dayBox_list_item.innerHTML = item.date || ''
+                    dayBox_list.appendChild(dayBox_list_item)
+                    if (item.day == 0 || item.day == 6) {
+                        dayBox_list_item.style.color = 'red'
+                    }
+                    if (dayBox_list_item.innerHTML == '') {
+                        dayBox_list_item.classList.add('noneClass')
+                    }
+                    if (`${yearNum.value}-${mouth}-${item.date}` === today) {
+                        dayBox_list_item.style.color = 'rgb(0 137 255)'
+                        dayBox_list_item.classList.add('select')
+                    }
+                })
+            }
+        })
+
+        // 填充月份
+        function pushMouth() {
+            let mouthObj = {
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                5: [],
+                6: [],
+                7: [],
+                8: [],
+                9: [],
+                10: [],
+                11: [],
+                12: []
+            }
+            let day = new Date(`${parseInt(yearNum.value)}-01-01`).getTime()
+            let oneDay = 24 * 60 * 60 * 1000
+            while (true) {
+                if (new Date(day).getFullYear() > parseInt(yearNum.value)) {
+                    break
+                }
+                mouthObj[new Date(day).getMonth() + 1].push({
+                    date: new Date(day).getDate(),
+                    day: new Date(day).getDay()
+                })
+                day = day + oneDay
+            }
+            for (let mouth in mouthObj) {
+                if (mouthObj[mouth][0].day !== 0) {
+                    let tempA = mouthObj[mouth][0].day;
+                    for (let i = 0; i < tempA; i++) {
+                        mouthObj[mouth].unshift({})
+                    }
+                }
+                console.log(mouthObj[mouth][mouthObj[mouth].length - 1])
+                if (mouthObj[mouth][mouthObj[mouth].length - 1].day !== 6) {
+                    let tempB = mouthObj[mouth][mouthObj[mouth].length - 1].day;
+                    for (let i = 6; i > tempB; i--) {
+                        mouthObj[mouth].push({})
+                    }
+                }
+            }
+            return mouthObj
+        }
+
+        document.body.addEventListener('click', (e) => {
+            const target = e.target
+            if (target.className === 'dayBox_list_item' && target.innerHTML !== '') {
+                clearClass('.dayBox_list_item', 'select')
+                target.classList.add('select')
+            }
+        })
+
+        clearClass = (class_, name) => {
+            let class_list = document.querySelectorAll(class_);
+            [...class_list].forEach((item) => {
+                item.classList.remove(name)
+            })
+        }
+    </script>
+</body>
+
+</html>

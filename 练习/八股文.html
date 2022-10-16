@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .fdbox,
+        .jlbox {
+            width: 30px;
+            height: 30px;
+            background-color: aqua;
+            display: inline-block;
+        }
+
+        .flexDom {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            /* border */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="fdbox"></div>
+    <div class="jlbox"></div>
+    <div class="flexDom">
+        <div class="flex-child"></div>
+        <div class="flex-child"></div>
+        <div class="flex-child"></div>
+        <div class="flex-child"></div>
+    </div>
+    <script>
+        // 深拷贝和浅拷贝的区别
+        /* 
+            浅拷贝对对象来说相当于拷贝引用地址，深拷贝是将对象中的数据拷贝到另一个地址，实现方法有JSON，问题是无法拷贝方法，第二是Object.assign()，但是只能拷贝一层
+        */
+
+        // 深克隆
+        function deepClone(obj, hash = new WeakMap()) {
+            // 处理null或者undefined
+            if (obj === null) return obj;
+            // 处理日期类型
+            if (obj instanceof Date) return new Date(obj);
+            // 处理正则类型
+            if (obj instanceof RegExp) return new RegExp(obj);
+            // 普通值或函数不需要深拷贝
+            if (typeof obj !== "object") return obj;
+            // 对象进行深拷贝
+            if (hash.get(obj)) return hash.get(obj);
+            let cloneObj = new obj.constructor();
+            console.log(obj.constructor)
+            // 找到的是所属类原型上的constructor,而原型上的 constructor指向的是当前类本身
+            hash.set(obj, cloneObj);
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    // 实现一个递归拷贝
+                    cloneObj[key] = deepClone(obj[key], hash);
+                }
+            }
+            return cloneObj;
+        }
+
+        let obj = {
+            a: 1,
+            b: new Date(),
+            c: /a/,
+            d: {
+                e: 's'
+            },
+            e: [1, 2, 3]
+        }
+        let clone_obj = deepClone(obj)
+        clone_obj.d.e = 'b'
+        clone_obj.e.push('b')
+        // console.log(obj, clone_obj)
+
+        // 防抖和节流
+        let fdbox = document.querySelector('.fdbox')
+        let jlbox = document.querySelector('.jlbox')
+        // 防抖和节流
+        function debounce(func, time) {
+            // let oldTime = new Date().getTime()
+            let timeOut = null
+            return function (e) {
+                if (timeOut) {
+                    clearTimeout(timeOut)
+                    timeOut = null
+                }
+                timeOut = setTimeout(() => {
+                    func(e)
+                }, time)
+            }
+        }
+        fdbox.addEventListener('click', debounce((e) => {
+            console.log(e, 1)
+        }, 1000))
+
+        function throttle(func, time) {
+            let oldTime = new Date().getTime()
+            return function (e) {
+                let newTime = new Date().getTime()
+                if (newTime - oldTime >= time) {
+                    func(e)
+                    oldTime = newTime
+                }
+            }
+        }
+
+        jlbox.addEventListener('click', throttle((e) => {
+            console.log(e, 2)
+        }, 1000))
+
+        /* 
+            es6常用新属性
+            let/const关键字；解构赋值；Promise；Set和Map；class类；对象合并Object.assign()；...，es6扩展运算符；模板字符串；for of 值遍历；箭头函数；
+        */
+
+        // http1 2 3的区别，强缓存和协商缓存 etag 详细，if-modify-since 详细，两者的优先级
+        /* 
+            HTTP1.0默认使用 Connection:cloose，浏览器每次请求都需要与服务器建立一个 TCP 连接，服务器处理完成后立即断开 TCP 连接，服务器不跟踪每个客户端也不记录过去的请求
+
+            HTTP1.1默认使用 Connection:keep-alive, 减少了TCP连接的重复建立和断开所造成的额外开销，减去了服务器端的压力。持久连接使得多数请求以管线化方式（pipelining）成为可能。可以同时并行发送多个请求，而不需要一个接一个的等待响应了
+            缺点：高延迟，带来页面加载速度的降低。无状态特性，带来巨大的Http头部。明文传输，不安全。不支持服务器推送消息。
+
+            http2.0将请求和响应数据分割为更小的帧，并且它们采用二进制编码(http1.0基于文本格式)。多个帧之间可以乱序发送，根据帧首部的流表示可以重新组装。Http2.0开发了专门的“HPACK”算法，大大压缩了Header信息。http2.0中引入了多路复用技术，很好的解决了浏览器限制同一个域名下的请求数量的问题。HTTP2.0在一定程度上改不了传统的“请求-应答”工作模式，服务器不再完全被动地响应请求，也可以新建“流”主动向客户端发送消息。
+            缺点：TCP以及TCP+TLS建立连接的延迟。TCP的队头阻塞没有彻底解决
+
+            Http3.0实现了类似TCP的流量控制，传输可靠性的功能。实现了快速握手功能。集成了TLS加密功能。多路复用，彻底解决TCP中队头阻塞的问题。
+
+            强缓存不会向服务器发送请求，http状态码为200，在请求头里有个cache-control字段控制。协商缓存会向服务器发送请求，会根据etag 和 last-modified字段来判断，如命中缓存返回304，etag 和 last-modified会换个key名：if-none-matched和if-modified-since
+        */
+    </script>
+    <script>
+        //  new Date, function, regexp, arr, obj,
+        function my_deepClone(obj, map = new WeakMap()) {
+            if (typeof obj === "function") {
+                let str = obj.toString()
+                let newStr = str.substring(str.indexOf('{') + 1, str.lastIndexOf('}'))
+                return new Function(newStr)
+            }
+            if (typeof obj !== "object" || obj === null) return obj
+            if (obj instanceof Date) return new Date(obj)
+            if (obj instanceof RegExp) return new RegExp(obj)
+            if (map.get(obj)) return map.get(obj)
+            let cloneObj = new obj.constructor()
+            // 防止自我引用死循环
+            map.set(obj, cloneObj)
+            for (let key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    cloneObj[key] = my_deepClone(obj[key], map)
+                }
+            }
+            return cloneObj
+        }
+
+        let obj_1 = {
+            a: new Date(),
+            b: /a/,
+            c: [1, 2, 3, [1, 2, 3]],
+            d: {
+                a: 1,
+                b: {
+                    a: 1
+                }
+            },
+            e() {
+                console.log(this)
+            }
+        }
+
+        let obj_2 = my_deepClone(obj_1)
+        console.log(obj_1, obj_2)
+        // obj_2.a = new Date('2020-01-01')
+        obj_2.d.b.a = 3
+        obj_2.c.push(4)
+        obj_2.e.n = 'sss'
+        console.log(obj_1, obj_2)
+        console.log(obj_1.e === obj_2.e)
+        console.log(obj_1.e.n, obj_2.e.n)
+        // obj_1.e()
+        // obj_2.e()
+
+        // call apply bind重写
+        var call_num = 5
+
+        function my_call(fn, obj, ...arg) {
+            const Key = `${new Date().getTime()}Key`
+            obj[Key] = fn
+            let result = obj[Key](...arg)
+            delete obj[Key]
+            return result
+        }
+
+        function my_apply(fn, obj, arg) {
+            const Key = `${new Date().getTime()}Key`
+            obj[Key] = fn
+            let result = obj[Key](arg)
+            delete obj[Key]
+            return result
+        }
+
+        function callFn(a, b) {
+            // console.log(a + b + this.call_num, this)
+            // console.log(this.call_num)
+            return this.call_num
+        }
+
+        let callObj = {
+            call_num: 3
+        }
+        my_call(callFn, callObj, 3, 1)
+
+        function my_bind(fn, obj, ...arg) {
+            return function () {
+                const Key = `${new Date().getTime()}Key`
+                obj[Key] = fn
+                let result = obj[Key](...arg)
+                delete obj[Key]
+                return result
+            }
+        }
+
+        let bind_fn = my_bind(callFn, callObj, 3, 4)
+        console.log(bind_fn())
+        console.log(callFn())
+
+        // new 的实现
+        function my_new(fn, ...arg) {
+            let new_obj = {}
+            new_obj['__proto__'] = fn.prototype
+            fn.call(new_obj, ...arg)
+            return new_obj
+        }
+
+        function new_fn(name, age) {
+            this.name = name
+            this.age = age
+        }
+
+        let my_new_obj = my_new(new_fn, 'na', 12)
+        console.log(my_new_obj)
+
+        // event loop
+        console.log('loop_1')
+
+        setTimeout(() => {
+            console.log('loop_2')
+
+            new Promise((res) => {
+                console.log('loop_3')
+                res()
+            }).then(() => {
+                console.log('loop_4')
+            })
+        })
+
+        new Promise((res) => {
+            console.log('loop_5')
+            res()
+        }).then(() => {
+            console.log('loop_6')
+        })
+
+        setTimeout(() => {
+            console.log('loop_7')
+            new Promise((res) => {
+                console.log('loop_8')
+                res()
+            }).then(() => {
+                console.log('loop_9')
+            })
+        })
+
+        console.log('loop_10')
+
+        // 1 5 10 6 2 3 4 7 8 9
+    </script>
+</body>
+
+</html>

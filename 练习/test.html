@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            /* writing-mode: vertical-rl; */
+        }
+
+        .div {}
+
+        .example {
+            width: 80px;
+            height: 80px;
+            border: 40px solid deepskyblue;
+        }
+
+        .a {
+            flex: 0 2 100px;
+        }
+
+        .c,
+        .b {
+            flex: 0 1 100px;
+        }
+
+        .c {
+            flex: 3 0 20px;
+        }
+
+        .d {
+            flex: 2 0 20px;
+        }
+
+        .box {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(to right bottom, deeppink 50%, transparent 50%),
+                linear-gradient(to top right, deeppink 50%, transparent 50%),
+                darkblue;
+            /* background-blend-mode: multiply, screen;
+            position: relative; */
+        }
+
+        .horse-run {
+            position: absolute;
+            offset-path: path("M10,80 q100,120 120,20 q140,-50 160,0");
+            animation: motion 3s linear infinite;
+        }
+
+        @keyframes motion {
+            100% {
+                offset-distance: 100%;
+            }
+        }
+
+        .father_1 {}
+    </style>
+</head>
+
+<body>
+    <div class="box"></div>
+    <img src="horse.png" class="horse-run">
+    <div class="father_1">
+        <div class="child_1">哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈</div>
+    </div>"0 0 280 150">
+    <path d="M10,80 q100,120 120,20 q140,-50 160,0" stroke="#cd0000" stroke-width="2" fill="none" />
+    </svg>
+    <img src="./1.jpg" alt="">
+    <script>
+        class Model1 {
+            getData(arg) {
+                console.log(arg)
+                // 此处省略获取数据的逻辑
+                return [{
+                    id: 1,
+                    name: 'Niko'
+                }, {
+                    id: 2,
+                    name: 'Bellic'
+                }]
+            }
+        }
+
+        class Model2 {
+            getData(arg) {
+                console.log(arg)
+                // 此处省略获取数据的逻辑
+                return [{
+                    id: 1,
+                    name: 'Niko'
+                }, {
+                    id: 2,
+                    name: 'Bellic'
+                }]
+            }
+        }
+
+        // function wrap(Model, key) {
+        //     // 获取Class对应的原型
+        //     let target = Model.prototype
+
+        //     // 获取函数对应的描述符
+        //     let descriptor = Object.getOwnPropertyDescriptor(target, key)
+
+        //     // 生成新的函数，添加耗时统计逻辑
+        //     let log = function (...arg) {
+        //         let start = new Date().valueOf()
+        //         try {
+        //             return descriptor.value.apply(this, arg) // 调用之前的函数
+        //         } finally {
+        //             let end = new Date().valueOf()
+        //             console.log(`start: ${start} end: ${end} consume: ${end - start}`)
+        //         }
+        //     }
+
+        //     // 将修改后的函数重新定义到原型链上
+        //     Object.defineProperty(target, key, {
+        //         ...descriptor,
+        //         value: log // 覆盖描述符重的value
+        //     })
+        // }
+
+        // wrap(Model1, 'getData')
+        // wrap(Model2, 'getData')
+
+        // // start: XXX end: XXX consume: XXX
+        // console.log(new Model1().getData(2)) // [ { id: 1, name: 'Niko'}, { id: 2, name: 'Bellic' } ]
+        // // start: XXX end: XXX consume: XXX
+        // console.log(Model2.prototype.getData(4)) // [ { id: 1, name: 'Niko'}, { id: 2, name: 'Bellic' } ]
+
+
+        // function wrap(decorator) {
+        //     return function (Model, key) {
+        //         let target = Model.prototype
+        //         let dscriptor = Object.getOwnPropertyDescriptor(target, key)
+
+        //         decorator(target, key, descriptor)
+        //     }
+        // }
+
+        // let log = function (target, key, descriptor) {
+        //     // 将修改后的函数重新定义到原型链上
+        //     Object.defineProperty(target, key, {
+        //         ...descriptor,
+        //         value: function (...arg) {
+        //             let start = new Date().valueOf()
+        //             try {
+        //                 return descriptor.value.apply(this, arg) // 调用之前的函数
+        //             } finally {
+        //                 let end = new Date().valueOf()
+        //                 console.log(`start: ${start} end: ${end} consume: ${end - start}`)
+        //             }
+        //         }
+        //     })
+        // }
+
+        // let seal = function (target, key, descriptor) {
+        //     Object.defineProperty(target, key, {
+        //         ...descriptor,
+        //         writable: false
+        //     })
+        // }
+
+        // // 参数的转换处理
+        // log = wrap(log)
+        // seal = warp(seal)
+
+        // // 添加耗时统计
+        // log(Model1, 'getData')
+        // log(Model2, 'getData')
+
+        // // 设置属性不可被修改
+        // seal(Model1, 'getData')
+    </script>
+
+    <script>
+        function addCart() {
+            return new Promise((resolve, reject) => {
+                reject('aa')
+            })
+        }
+
+        async function a() {
+            const b = await addCart()
+            console.log(b)
+        }
+        try {
+            a()
+        } catch (e) {
+            console.log(e)
+        }
+    </script>
+
+    <script>
+        var as = 0
+        {   
+            as = 2
+            as = 3
+            function as(){}
+            as = 4
+
+        }
+        console.log(as)
+    </script>
+</body>
+
+</html>
+
+<!-- 与马儿运动本身无关，为了方便大家看清运动轨迹 -->
+<svg width="280" height="150" viewBox=

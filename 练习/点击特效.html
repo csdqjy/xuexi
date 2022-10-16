@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            padding: 0;
+            margin: 0;
+        }
+
+        .click {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            transform: translate(-50%, -50%);
+            /* background: rgb(235, 172, 211); */
+            border-radius: 50%;
+            border: 1px solid rgb(255, 25, 224);
+            animation: wave-animate 1s linear;
+        }
+
+        @keyframes wave-animate {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+                transform-origin: center;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(2);
+                opacity: 0;
+                transform-origin: center;
+            }
+        }
+
+        .icon {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            transform: translate(-50%, -50%);
+            background: rgba(29, 145, 223, 0.521);
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="icon"></div>
+    <script>
+        document.body.addEventListener('click', (e) => {
+            let click = document.createElement('DIV')
+            click.className = 'click'
+            click.style.left = e.screenX + 'px'
+            click.style.top = e.screenY + 'px'
+            console.log(e)
+            document.body.appendChild(click)
+            setTimeout(() => {
+                document.body.removeChild(click)
+            }, 1000)
+        })
+        let icon = document.querySelector('.icon')
+        document.body.addEventListener('mousemove', (e) => {
+            icon.style.left = e.pageX + 'px'
+            icon.style.top = e.pageY + 'px'
+        })
+
+        function block() {
+            setInterval(() => {
+                debugger;
+            }, 50);
+        }
+        try {
+            block();
+        } catch (err) {}
+    </script>
+</body>
+
+</html>

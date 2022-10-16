@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .app {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .img {
+            width: 100px;
+            height: 150px;
+            position: absolute;
+            left: 280px;
+            top: 400px;
+            background-image: url('./img/1.webp');
+            background-size: 100% 100%;
+        }
+
+        .anmi {
+            animation: nongchang 5s linear;
+        }
+
+        @keyframes nongchang {
+            0% {
+                left: 280px;
+                top: 400px;
+            }
+
+            11% {
+                left: 230px;
+                top: 200px;
+                transform: rotate(-140deg);
+            }
+
+            22% {
+                left: 180px;
+                top: 170px;
+                transform: rotate(-140deg);
+
+            }
+
+            33% {
+                left: 130px;
+                top: 200px;
+                transform: rotate(-140deg);
+
+            }
+
+            44% {
+                left: 180px;
+                top: 230px;
+                transform: rotate(-140deg);
+
+            }
+
+            55% {
+                left: 230px;
+                top: 200px;
+                transform: rotate(-140deg);
+            }
+
+            66% {
+                left: 180px;
+                top: 170px;
+                transform: rotate(-140deg);
+
+            }
+
+            77% {
+                left: 130px;
+                top: 200px;
+                transform: rotate(-140deg);
+
+            }
+
+            88% {
+                left: 180px;
+                top: 230px;
+                transform: rotate(-140deg);
+
+            }
+
+            100% {
+                left: 230px;
+                top: 200px;
+                transform: rotate(-140deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="img"></div>
+    </div>
+    <script>
+        const img = document.querySelector('.img')
+        let flag = true
+        img.onclick = function () {
+            if (flag) {
+                flag = false
+                img.classList.add('anmi')
+                setTimeout(() => {
+                    img.classList.remove('anmi')
+                    flag = true
+                }, 5000)
+            } else {
+                console.log('bu')
+                return
+            }
+
+        }
+    </script>
+</body>
+
+</html>

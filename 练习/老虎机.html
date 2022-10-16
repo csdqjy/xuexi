@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .wrapper {
+            width: 300px;
+            height: 200px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-content: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            border: 1px solid red;
+        }
+
+        .wrapperList {
+            width: 25%;
+            height: 80px;
+            overflow: hidden;
+            border: 1px solid red;
+        }
+
+        .wrapperBtn {
+            padding: 10px;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            position: absolute;
+            bottom: -70px;
+            /* left: 50%; */
+            cursor: pointer;
+            color: red;
+            border: 1px solid red;
+        }
+
+        .wrapperItem {
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        .wrapperListBox {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            /* top: -65px; */
+            /* transition: all 0.1s linear; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="wrapperList">
+        </div>
+        <div class="wrapperList">
+        </div>
+        <div class="wrapperList">
+        </div>
+        <div class="wrapperBtn">点击抽奖</div>
+    </div>
+    <script>
+        const jackpot = ['香风智乃', '清姬', '岛风', '拉菲', '独角兽', '小天城', '恶毒', '小赤城']
+        const jackpotList = [...jackpot.slice(jackpot.length - 3, jackpot.length), ...jackpot]
+        const wrapperLists = document.querySelectorAll('.wrapperList');
+        const wrapperBtn = document.querySelector('.wrapperBtn');
+        const wrapperBoxs = []
+        const second = randomFn(3, 6)
+        let btnFlag = false
+        let num = 0
+        let interval = null
+
+        function randomFn(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min
+        }
+
+        function init() {
+            wrapperLists.forEach((item, index) => {
+                createBox(item, index)
+            })
+        }
+
+        function createBox(list, index) {
+            const wrapperListBox = document.createElement('DIV')
+            wrapperListBox.classList.add('wrapperListBox')
+            wrapperListBox.style['top'] = `${-65 - index * 30}px`
+            createItem(wrapperListBox)
+            list.appendChild(wrapperListBox)
+
+            wrapperBoxs.push(wrapperListBox)
+        }
+
+        function createItem(box) {
+            jackpotList.forEach(item => {
+                const wrapperItem = document.createElement('DIV')
+                wrapperItem.classList.add('wrapperItem')
+                wrapperItem.innerHTML = item
+                box.appendChild(wrapperItem)
+            })
+        }
+
+        init()
+
+        wrapperBtn.addEventListener('click', () => {
+            if (btnFlag) return
+            btnFlag = true
+            const renderArr = renderIndex()
+            console.log(renderArr)
+            wrapperBoxs.forEach((item, index) => {
+                let s = 0
+                let flag = false
+                const interval = setInterval(() => {
+                    // if (flag && parseFloat(item.style['top']) >= -(renderArr[index] * 30 + 5)) {
+                    //     console.log(renderArr[index], jackpotList[renderArr[index]])
+                    //     return
+                    // }
+                    if (flag && parseFloat(item.style['top']) === -((renderArr[index] - 1) *
+                            30 +
+                            5)) {
+                        console.log(renderArr[index], jackpotList[renderArr[index]])
+                        num++
+                        if (num === 3) {
+                            btnFlag = false
+                            num = 0
+                        }
+                        clearInterval(interval)
+                    }
+
+                    if (parseFloat(item.style['top']) >= -5) {
+                        item.style['top'] = `-${(jackpot.length)*30+5}px`
+                    } else {
+                        item.style['top'] =
+                            `${parseFloat(window.getComputedStyle(item).top)+1}px`
+                    }
+                }, 1);
+
+                // setInterval(() => {
+                //     item.style['top'] = `${parseFloat(window.getComputedStyle(item).top)+30}px`
+                // }, 100)
+                setTimeout(() => {
+                    flag = true
+                }, second * 1000);
+            })
+        })
+
+        function renderIndex() {
+            
+        }
+
+        // for (let i = 0; i < 3; i++) {
+        //     setInterval(() => {
+        //         console.log(i)
+        //     }, 1000+i*500)
+        // }
+    </script>
+</body>
+
+</html>

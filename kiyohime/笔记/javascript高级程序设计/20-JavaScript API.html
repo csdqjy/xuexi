@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #droptarget {
+            width: 100px;
+            height: 100px;
+            border: 1px solid rgb(0, 0, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <iframe id="myframe"
+        src="http://127.0.0.1:5500/kiyohime/%E7%AC%94%E8%AE%B0/javascript%E9%AB%98%E7%BA%A7%E7%A8%8B%E5%BA%8F%E8%AE%BE%E8%AE%A1/20-JavaScript%20API_1.html"
+        frameborder="0"></iframe>
+    <input id='files-list' type="file">
+    <div id='output'></div>
+    <div id='progress'></div>
+    <div id="droptarget"></div>
+
+    <div draggable="true" id='drag' style="width: 200px;height: 200px;background-color: rgb(100, 100, 100);"></div>
+    <script>
+        // =============跨上下文消息
+        let iframeWindow = document.getElementById("myframe").contentWindow;
+        iframeWindow.postMessage("sdasad", '*');
+
+        // =============批量编码
+        // const textEncoder = new TextEncoder();
+        // const decodedText = 'foo';
+        // const encodedText = textEncoder.encode(decodedText);
+
+        // // f的UTF-8编码是0x66（即十进制102）
+        // // o的UTF-8编码是0x6F（即二进制111）
+        // console.log(encodedText); // Uint8Array(3) [102, 111, 111]
+
+
+        const textEncoder = new TextEncoder();
+        const fooArr = new Uint8Array(3);
+        const barArr = new Uint8Array(2);
+        const fooResult = textEncoder.encodeInto('foo', fooArr);
+        const barResult = textEncoder.encodeInto('bar', barArr);
+
+        console.log(fooArr); // Uint8Array(3) [102, 111, 111]
+        console.log(fooResult); // { read: 3, written: 3 }
+
+        console.log(barArr); // Uint8Array(2) [98, 97]
+        console.log(barResult); // { read: 2, written: 2 }
+
+        // ===========  批量解码
+
+        const textDecoder = new TextDecoder();
+
+        // f的UTF-8编码是0x66（即十进制102）
+        // o的UTF-8编码是0x6F（即二进制111）
+        const encodedText = Uint8Array.of(102, 111, 111);
+        const decodedText = textDecoder.decode(encodedText);
+
+        console.log(decodedText); // foo
+
+        // =========== File 类型
+
+        // let filesList = document.getElementById("files-list");
+        // filesList.addEventListener("change", (event) => {
+        //     let files = event.target.files,
+        //         i = 0,
+        //         len = files.length;
+
+        //     while (i < len) {
+        //         const f = files[i];
+        //         console.log(`${f.name} (${f.type}, ${f.size} bytes)`);
+        //         i++;
+        //     }
+        // });
+
+        // =========== FileReader 类型
+
+        let filesList = document.getElementById("files-list");
+        // filesList.addEventListener("change", (event) => {
+        //     let info = "",
+        //         output = document.getElementById("output"),
+        //         progress = document.getElementById("progress"),
+        //         files = event.target.files,
+        //         type = "default",
+        //         reader = new FileReader();
+
+        //     if (/image/.test(files[0].type)) {
+        //         reader.readAsDataURL(files[0]);
+        //         type = "image";
+        //     } else {
+        //         reader.readAsText(files[0]);
+        //         type = "text";
+        //     }
+
+        //     reader.onerror = function () {
+        //         output.innerHTML = "Could not read file, error code is " +
+        //             reader.error.code;
+        //     };
+
+        //     reader.onprogress = function (event) {
+        //         if (event.lengthComputable) {
+        //             progress.innerHTML = `${event.loaded}/${event.total}`;
+        //         }
+        //     };
+
+        //     reader.onload = function () {
+        //         let html = "";
+
+        //         switch (type) {
+        //             case "image":
+        //                 html = `<img src="${reader.result}">`;
+        //                 break;
+        //             case "text":
+        //                 html = reader.result;
+        //                 break;
+        //         }
+        //         output.innerHTML = html;
+        //     };
+        // });
+
+        // ========== Blob 与部分读取
+
+        console.log(new Blob(['foo']));
+        // Blob {size: 3, type: ""}
+
+        console.log(new Blob(['{"a": "b"}'], {
+            type: 'application/json'
+        }));
+        // {size: 10, type: "application/json"}
+
+        console.log(new Blob(['<p>Foo</p>', '<p>Bar</p>'], {
+            type: 'text/html'
+        }));
+        // {size: 20, type: "text/html"}
+
+        // filesList.addEventListener("change", (event) => {
+        //     let info = "",
+        //         output = document.getElementById("output"),
+        //         progress = document.getElementById("progress"),
+        //         files = event.target.files,
+        //         reader = new FileReader(),
+        //         blob = blobSlice(files[0], 0, 32);
+        //     if (blob) {
+        //         reader.readAsText(blob);
+
+        //         reader.onerror = function () {
+        //             output.innerHTML = "Could not read file, error code is " +
+        //                 reader.error.code;
+        //         };
+        //         reader.onload = function () {
+        //             output.innerHTML = reader.result;
+        //         };
+        //     } else {
+        //         console.log("Your browser doesn't support slice().");
+        //     }
+        // });
+
+        // =========== 对象 URL 与 Blob
+
+        filesList.addEventListener("change", (event) => {
+            let info = "",
+                output = document.getElementById("output"),
+                progress = document.getElementById("progress"),
+                files = event.target.files,
+                reader = new FileReader(),
+                url = window.URL.createObjectURL(files[0]);
+            if (url) {
+                if (/image/.test(files[0].type)) {
+                    output.innerHTML = `<img src="${url}">`;
+                } else {
+                    output.innerHTML = "Not an image.";
+                }
+            } else {
+                output.innerHTML = "Your browser doesn't support object URLs.";
+            }
+        });
+
+        // =========== 读取拖放文件
+
+        let droptarget = document.getElementById("droptarget");
+
+        function handleEvent(event) {
+            let info = "",
+                output = document.getElementById("output"),
+                files, i, len;
+            event.preventDefault();
+
+            if (event.type == "drop") {
+                files = event.dataTransfer.files;
+                i = 0;
+                len = files.length;
+
+                while (i < len) {
+                    info += `${files[i].name} (${files[i].type}, ${files[i].size} bytes)<br>`;
+                    i++;
+                }
+
+                output.innerHTML = info;
+            }
+        }
+        droptarget.addEventListener("dragenter", handleEvent);
+        droptarget.addEventListener("dragover", handleEvent);
+        droptarget.addEventListener("drop", handleEvent);
+    </script>
+    <script>
+        // =========== 原生拖放
+        let drag = document.getElementById('drag')
+        drag.ondragstart = function (event) {
+
+        }
+    </script>
+    <script>
+        // =============== Notifications API
+        Notification.requestPermission()
+            .then((permission) => {
+                console.log('User responded to permission request:', permission);
+            });
+
+        // new Notification('Title text!');
+
+        // new Notification('Title text!', {
+        //     body: 'Body text!',
+        //     image: './Video/1.png',
+        //     vibrate: true
+        // });
+
+        // const n = new Notification('I will close in 1000ms');
+        // setTimeout(() => n.close(), 1000);
+        // const n = new Notification("foo");
+
+        // n.onshow = () => console.log("Notification was shown!");
+        // n.onclick = () => console.log("Notification was clicked!");
+        // n.onclose = () => console.log("Notification was closed!");
+        // n.onerror = () => console.log("Notification experienced an error!");
+    </script>
+    <script>
+        // ============== Streams API
+        async function* ints() {
+            // 每1000毫秒生成一个递增的整数
+            for (let i = 0; i < 5; ++i) {
+                yield await new Promise((resolve) => setTimeout(resolve, 1000, i));
+            }
+        }
+
+        const readableStream = new ReadableStream({
+            async start(controller) {
+                for await (let chunk of ints()) {
+                    controller.enqueue(chunk);
+                }
+
+                controller.close();
+            },
+        });
+
+        console.log(readableStream.locked); // false
+        const readableStreamDefaultReader = readableStream.getReader();
+        console.log(readableStream.locked); // true
+
+        // 消费者
+        (async function () {
+            while (true) {
+                const {
+                    done,
+                    value
+                } = await readableStreamDefaultReader.read();
+                if (done) {
+                    break;
+                } else {
+                    console.log(value);
+                }
+            }
+        })();
+
+        // =====================
+
+        async function* ints() {
+            // 每1000毫秒生成一个递增的整数
+            for (let i = 0; i < 5; ++i) {
+                yield await new Promise((resolve) => setTimeout(resolve, 1000, i));
+            }
+        }
+
+        const writableStream = new WritableStream({
+            write(value) {
+                console.log(value);
+            }
+        });
+
+        console.log(writableStream.locked); // false
+        const writableStreamDefaultWriter = writableStream.getWriter();
+        console.log(writableStream.locked); // true
+
+        // 生产者
+        (async function () {
+            for await (let chunk of ints()) {
+                await writableStreamDefaultWriter.ready;
+                writableStreamDefaultWriter.write(chunk);
+            }
+
+            writableStreamDefaultWriter.close();
+        })();
+
+        // ================
+
+        async function* ints() {
+            // 每1000毫秒生成一个递增的整数
+            for (let i = 0; i < 5; ++i) {
+                yield await new Promise((resolve) => setTimeout(resolve, 1000, i));
+            }
+        }
+
+        const {
+            writable,
+            readable
+        } = new TransformStream({
+            transform(chunk, controller) {
+                controller.enqueue(chunk * 2);
+            }
+        });
+
+        const readableStreamDefaultReader = readable.getReader();
+        const writableStreamDefaultWriter = writable.getWriter();
+
+        // 消费者
+        (async function () {
+            while (true) {
+                const {
+                    done,
+                    value
+                } = await readableStreamDefaultReader.read();
+
+                if (done) {
+                    break;
+                } else {
+                    console.log(value);
+                }
+            }
+        })();
+
+        // 生产者
+        (async function () {
+            for await (let chunk of ints()) {
+                await writableStreamDefaultWriter.ready;
+                writableStreamDefaultWriter.write(chunk);
+            }
+
+            writableStreamDefaultWriter.close();
+        })();
+    </script>
+    <script>
+        // ============== 计时 API
+        // ============ High Resolution Time API
+        const t0 = Date.now();
+        foo();
+        const t1 = Date.now();
+
+        const duration = t1 - t0;
+
+        console.log(duration);
+    </script>
+    <script>
+        for (let color of ["red", "green", "blue"]) {
+            const div = document.createElement("div");
+            const shadowDOM = div.attachShadow({
+                mode: "open"
+            });
+
+            document.body.appendChild(div);
+            shadowDOM.innerHTML = `
+            <p>Make me ${color}</p>
+          
+            <style>
+            p {
+              color: ${color};
+            }
+            </style>
+          `;
+        }
+    </script>
+</body>
+
+</html>

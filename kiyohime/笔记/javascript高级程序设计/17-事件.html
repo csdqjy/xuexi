@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            height: 200vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myDiv" style="width: 100px;height: 100px;background-color: khaki;"></div>
+    <input type="text" id="myText">
+    <button id="myBtn"></button>
+    <script>
+        document.body.addEventListener('click', (e) => {
+            console.log(e.clientX, e.clientY)
+            console.log(e.pageX, e.pageY)
+        })
+
+        let div = document.getElementById("myDiv");
+        div.addEventListener("click", (event) => {
+            let keys = new Array();
+
+            if (event.shiftKey) {
+                keys.push("shift");
+            }
+
+            if (event.ctrlKey) {
+                keys.push("ctrl");
+            }
+
+            if (event.altKey) {
+                keys.push("alt");
+            }
+
+            if (event.metaKey) {
+                keys.push("meta");
+            }
+
+            console.log("Keys: " + keys.join(","));
+
+        });
+
+
+        document.body.addEventListener('mousewheel', (e) => {
+            console.log(e.wheelDelta)
+        })
+
+        let textbox = document.getElementById("myText");
+        textbox.addEventListener("keyup", (event) => {
+            console.log(event.keyCode);
+        });
+
+        document.body.addEventListener('contextmenu', (e) => {
+            e.preventDefault()
+        })
+
+        let btn = document.getElementById("myBtn");
+
+        // 创建event对象
+        let event = document.createEvent("MouseEvents");
+
+        // 初始化event对象
+        event.initMouseEvent("click", true, true, document.defaultView,
+            0, 0, 0, 0, 0, false, false, false, false, 0, null);
+
+        // 触发事件
+        btn.dispatchEvent(event);
+    </script>
+</body>
+
+</html>

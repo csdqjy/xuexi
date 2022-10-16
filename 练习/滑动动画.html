@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            position: relative;
+        }
+
+        .header {
+            width: 100%;
+            height: 300px;
+            background-color: rgba(255, 50, 50, 0.2);
+            transition: all 1.5s;
+        }
+
+        .main {
+            width: 100%;
+            height: 200vh;
+            background-color: rgba(50, 255, 50, 0.2);
+            transition: all 1.5s;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header"></header>
+    <main class="main"></main>
+    <script>
+        let header = document.querySelector(".header")
+        let main = document.querySelector(".main")
+        let body = document.querySelector("body")
+        let flag = true
+        window.onscroll = function () {
+            if (document.documentElement.scrollTop > 40 && flag) {
+                header.style["height"] = "0";
+                flag = false
+            }
+            if (document.documentElement.scrollTop <= 40 && !flag) {
+                header.style["height"] = "300px";
+                flag = true
+            }
+        }
+
+        const data = {
+            code: "0", // code不为0时，展示msg提示
+            msg: "",
+            success: true,
+            data: {
+                filterResult: {
+                    // 筛选结果
+                    total: 100, // 总计营销规划
+                    detail: "其中：S级大促（23个）；A级大促（23个）；", // 筛选详情
+                },
+                top: [{
+                        name: "S级大促", //大促类型
+                        startTime: "2021-03-01 00:00:00", // 开始时间
+                        endTime: "2021-03-02 00:00:00", // 结束时间
+                        backgroundColor: "#ff0000", // 块颜色
+                    },
+                    {
+                        name: "A级大促", //大促类型
+                        startTime: "2021-03-04 00:00:00", // 开始时间
+                        endTime: "2021-03-07 00:00:00", // 结束时间
+                        backgroundColor: "#e25a5a", // 块颜色
+                    },
+                ],
+                other: [{
+                        name: "S级大促", // 活动类型父类名称
+                        color: "#ff0000", // 组颜色
+                        backgroundColor: "#ff000014",
+                        children: [{
+                                name: "年货节", // 活动类型子类名称
+                                marketPlans: [{
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 4, //营销计划id
+                                        name: "你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 8, //营销计划id
+                                        name: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-07 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 86, //营销计划id
+                                        name: "hhh", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 353, //营销计划id
+                                        name: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                ],
+                            },
+                            {
+                                name: "热8", // 活动类型子类名称
+                                marketPlans: [{
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 2, //营销计划id
+                                        name: "BBB", // 营销计划名称
+                                        department: "B", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-03 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 4, //营销计划id
+                                        name: "DDD", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 5, //营销计划id
+                                        name: "FFF", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 6, //营销计划id
+                                        name: "EEE", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 5, //营销计划id
+                                        name: "FFF", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 6, //营销计划id
+                                        name: "EEE", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 7, //营销计划id
+                                        name: "GGG", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-07 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                ],
+                            },
+                            {
+                                name: "年货节", // 活动类型子类名称
+                                marketPlans: [{
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 4, //营销计划id
+                                        name: "你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 8, //营销计划id
+                                        name: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-07 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 86, //营销计划id
+                                        name: "hhh", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 353, //营销计划id
+                                        name: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                ],
+                            },
+                            {
+                                name: "热8", // 活动类型子类名称
+                                marketPlans: [{
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 2, //营销计划id
+                                        name: "BBB", // 营销计划名称
+                                        department: "B", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-03 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 4, //营销计划id
+                                        name: "DDD", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 5, //营销计划id
+                                        name: "FFF", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 6, //营销计划id
+                                        name: "EEE", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 5, //营销计划id
+                                        name: "FFF", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 6, //营销计划id
+                                        name: "EEE", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 7, //营销计划id
+                                        name: "GGG", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-07 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                    {
+                        name: "S级大促", // 活动类型父类名称
+                        color: "#FFC20DFF", // 组颜色
+                        backgroundColor: "#ffc20d14",
+                        children: [{
+                                name: "年货节", // 活动类型子类名称
+                                marketPlans: [{
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 4, //营销计划id
+                                        name: "你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 8, //营销计划id
+                                        name: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-07 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 86, //营销计划id
+                                        name: "hhh", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 353, //营销计划id
+                                        name: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                ],
+                            },
+                            {
+                                name: "热8", // 活动类型子类名称
+                                marketPlans: [{
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 2, //营销计划id
+                                        name: "BBB", // 营销计划名称
+                                        department: "B", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-03 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 4, //营销计划id
+                                        name: "DDD", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 5, //营销计划id
+                                        name: "FFF", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 6, //营销计划id
+                                        name: "EEE", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 5, //营销计划id
+                                        name: "FFF", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 6, //营销计划id
+                                        name: "EEE", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 7, //营销计划id
+                                        name: "GGG", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-07 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                ],
+                            },
+                            {
+                                name: "年货节", // 活动类型子类名称
+                                marketPlans: [{
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 4, //营销计划id
+                                        name: "你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好你好", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 8, //营销计划id
+                                        name: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 3, //营销计划id
+                                        name: "eee", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-07 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 86, //营销计划id
+                                        name: "hhh", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 353, //营销计划id
+                                        name: "测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: [], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                ],
+                            },
+                            {
+                                name: "热8", // 活动类型子类名称
+                                marketPlans: [{
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 2, //营销计划id
+                                        name: "BBB", // 营销计划名称
+                                        department: "B", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-01 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-02 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-03 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 1, //营销计划id
+                                        name: "AAA", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 1, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 4, //营销计划id
+                                        name: "DDD", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-04 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 5, //营销计划id
+                                        name: "FFF", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 6, //营销计划id
+                                        name: "EEE", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-05 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 5, //营销计划id
+                                        name: "FFF", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                    {
+                                        id: 6, //营销计划id
+                                        name: "EEE", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-06 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+
+                                    {
+                                        id: 7, //营销计划id
+                                        name: "GGG", // 营销计划名称
+                                        department: "A", // 部门
+                                        marketCost: 123, // 预估市场费用投入
+                                        time: "2021-03-07 00:00:00", // 日期
+                                        spotColor: ["#FA1989FF", "#8A2EE6FF"], // 竖线颜色
+                                        promotionTag: 0, // 大促表示，0：非大促，1：大促
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        }
+        console.log("sss")
+
+        let oo = {
+            aaa: "www",
+            bbba: {
+                csc: "ssssssw"
+            }
+        }
+
+        let {
+            bbba: ba,
+            bbba: {
+                csc
+            }
+        } = oo
+        console.log(new Date(new Date().getTime() - (24 * 60 * 60 * 1000 * (new Date()
+            .getDay() - 1))))
+
+        let date = []
+
+        let i = 0;
+        let year = new Date().getFullYear();
+        while (i < 12) {
+            let month = i < 10 ? "0" + i : "" + i
+            let dayDate = []
+            let obj = {
+                month,
+                dayDate
+            };
+
+            i++
+        }
+    </script>
+</body>
+
+</html>

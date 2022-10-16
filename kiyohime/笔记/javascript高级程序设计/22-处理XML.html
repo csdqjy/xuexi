@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let xmldom = document.implementation.createDocument("", "root", null);
+
+        // console.log(xmldom.documentElement.tagName); // "root"
+        // console.log(xmldom)
+        let child = xmldom.createElement("child");
+        xmldom.documentElement.appendChild(child);
+
+
+        //////////////////////
+        // let parser = new DOMParser();
+        // let xmldom = parser.parseFromString("<root><child/></root>", "text/xml");
+
+        // console.log(xmldom.documentElement.tagName); // "root"
+        // console.log(xmldom.documentElement.firstChild.tagName); // "child"
+        // console.log(xmldom)
+        // let anotherChild = xmldom.createElement("child");
+        // xmldom.documentElement.appendChild(anotherChild);
+
+        // let children = xmldom.getElementsByTagName("child");
+        // console.log(children.length); // 2
+
+        //////////////////////
+        // let parser = new DOMParser(),
+        //     xmldom,
+        //     errors;
+        // try {
+        //     xmldom = parser.parseFromString("<root>", "text/xml");
+        //     errors = xmldom.getElementsByTagName("parsererror");
+        //     if (errors.length > 0) {
+        //         throw new Error("Parsing error!");
+        //     }
+        // } catch (ex) {
+        //     console.log("Parsing error!");
+        // }
+
+        /////////////////////////////
+        // let parser = new DOMParser();
+        // let xmldom = parser.parseFromString("<root><child/></root>", "text/xml");
+        // let serializer = new XMLSerializer();
+        // let xml = serializer.serializeToString(xmldom);
+        // console.log(xml);
+    </script>
+
+    <script>
+        //=========== 浏览器对XPath的支持
+
+        let result = xmldom.evaluate("employee/name", xmldom.documentElement, null,
+            XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+        console.log(result)
+        if (result !== null) {
+            let element = result.iterateNext();
+            console.log(result.iterateNext())
+            while (element) {
+                console.log(element.tagName);
+                node = result.iterateNext();
+            }
+        }
+    </script>
+</body>
+
+</html>

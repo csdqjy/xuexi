@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+        let ary = [9, 8, 7, 6, 5, 4, 3, 2, 1, 19, 14, 17, 15, 13, 16];
+        // 冒泡排序
+        // let BubbleSort = function (ary) {
+        //     let length = ary.length;
+        //     for (let i = 0; i < length - 1; i++) {
+        //         for (let j = 0; j < length - 1 - i; j++) {
+        //             if (ary[j] > ary[j + 1]) {
+        //                 let temp = ary[j + 1];
+        //                 ary[j + 1] = ary[j];
+        //                 ary[j] = temp;
+        //             }
+        //         }
+        //     }
+        //     return ary;
+        // }
+        // let arr = BubbleSort(ary);
+        // console.log(arr)
+
+        // 选择排序
+        let selectionSort = function (ary) {
+            let length = ary.length;
+            let temp = null;
+            let minIndex = null;
+            for (let i = 0; i < ary.length - 1; i++) {
+                minIndex = i;
+                for (let j = i + 1; j < ary.length; j++) {
+                    if (ary[j] < ary[minIndex]) {
+                        minIndex = j;
+                    }
+                }
+                temp = ary[i];
+                ary[i] = ary[minIndex];
+                ary[minIndex] = temp;
+            }
+            return ary;
+        };
+        let arr = selectionSort(ary);
+        console.log(arr)
+
+        // 插入排序
+        // let insertionSort = function (ary) {
+        //     let length = ary.length;
+        //     let preIndex, current;
+
+        //     // for (let i = 1; i < length; i++) {
+
+        //     //     preIndex = i - 1;   // 前一项的index
+        //     //     current = ary[i];   // 当前项
+
+
+        //     //     while (preIndex >= 0 && ary[preIndex] > current) {
+        //     //         // 如果前一项的index>=0并且前一项大于当前项
+        //     //         // 当前项就等于前一项
+        //     //         // 前一项index-1
+        //     //         ary[preIndex + 1] = ary[preIndex];
+        //     //         preIndex--;
+        //     //     }
+        //     //     // 把当前项插入到
+        //     //     ary[preIndex + 1] = current;
+        //     // }
+
+        //     for (let i = 1; i < length; i++) {
+        //         preIndex = i - 1;
+        //         current = ary[i]
+        //         for (let j = i; j > 0; j--) {
+        //             if (ary[preIndex] > current) {
+        //                 ary[preIndex + 1] = ary[preIndex];
+        //                 preIndex--
+        //             }
+        //         }
+        //         ary[preIndex + 1] = current;
+        //     }
+        //     return ary
+        // };
+        // let arr = insertionSort(ary);
+        // console.log(arr)
+
+        // 插入排序
+
+    </script>
+</body>
+
+</html>

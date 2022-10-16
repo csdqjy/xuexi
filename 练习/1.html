@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <style>
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+            width: 300px;
+        }
+
+        .flex-item {
+            box-sizing: border-box;
+            width: calc(100% /3);
+            height: 0;
+            padding: calc(100% /6) 0 calc(100% /6) 0;
+            border: 1px solid rgb(100, 100, 100);
+        }
+
+        .aaa {
+            width: 50px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            word-break: break-all;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aaa">哈哈哈哈哈哈啊哈哈哈哈哈哈哈哈</div>
+    <div class="flex">
+        <div class="flex-item"></div>
+        <div class="flex-item"></div>
+        <div class="flex-item"></div>
+        <div class="flex-item"></div>
+        <div class="flex-item"></div>
+        <div class="flex-item"></div>
+        <div class="flex-item"></div>
+        <div class="flex-item"></div>
+        <div class="flex-item"></div>
+    </div>
+    <input class="input" type="text">
+    <button class="button">计算</button>
+    <div>
+        最后一位是:<span class="span"></span>
+    </div>
+    <canvas id="myCanvas" width="409px" height="579px"></canvas>
+    <script>
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+
+        // 创建渐变
+        var grd = ctx.createLinearGradient(0, 0, 200, 0);
+        grd.addColorStop(0, "#ef4141");
+        grd.addColorStop(1, "#ef4141");
+
+        // 填充渐变
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, 0, 409, 579);
+    </script>
+    <script type="text/javascript">
+        let sum = 0;
+        for (let i = 1; i <= 1005; i++) {
+            sum = sum + i * i
+        }
+        console.log(sum)
+    </script>
+    <script>
+        let input = document.querySelector('.input')
+        let button = document.querySelector('.button')
+        let span = document.querySelector('.span')
+        let sfz = ""
+        button.onclick = function () {
+            let arr = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2]
+            sfz = input.value
+            span.innerHTML = arr[jisuan(sfz)]
+        }
+
+        function jisuan(sfz) {
+            let arr = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
+            let num = 0
+            sfz = sfz.split('')
+            for (let i = 0; i < arr.length; i++) {
+                num += sfz[i] * arr[i]
+            }
+            return num % 11
+        }
+    </script>
+    <script>
+        const prizeNum = 8
+        const order = [0, 1, 2, 7, 8, 3, 6, 5, 4]
+
+        function buildPriceMap(rewards = [1]) {
+            const realPrizeList = []
+            const noPrizeList = []
+
+            if (rewards && rewards.length > 0 && rewards.length <= prizeNum - 1) {
+                const noPrice = {
+                    rewardName: '感谢参与',
+                    rewardImg: '//img13.360buyimg.com/imagetools/jfs/t1/200842/21/16503/70167/619719fbE32e55b1c/8adf7bd84626e08a.png',
+                    // '//img10.360buyimg.com/imagetools/jfs/t1/190769/17/2580/22669/609a47beE64ee0519/c6c92c648960ef4e.png',
+                }
+                const allRewards = [...rewards, noPrice]
+
+                let i = 0
+                while (realPrizeList.length < prizeNum) {
+                    realPrizeList.push(allRewards[i])
+                    // 没奖的
+                    if (allRewards[i] === noPrice) {
+                        noPrizeList.push(realPrizeList.length - 1)
+                    }
+
+                    if (i + 1 >= allRewards.length) {
+                        i = 0
+                    } else {
+                        i++
+                    }
+                }
+
+                realPrizeList.push({
+                    rewardType: 'btn'
+                })
+                const list = []
+                for (let i = 0; i < realPrizeList.length; i++) {
+                    list.push(realPrizeList[order[i]])
+                }
+
+                console.log(list)
+            }
+        }
+
+        buildPriceMap()
+
+        let a = [1, 1, 2, 3, 4, 1, 2]
+        let b = a.find((item, index) => {
+            if (item === 1) return index
+        })
+        console.log(b, 'b')
+    </script>
+</body>
+
+</html>

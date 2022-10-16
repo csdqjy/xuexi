@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //  IndexedDB
+        let db,
+            request,
+            version = 1;
+
+        request = indexedDB.open("admin", version);
+        request.onerror = (event) =>
+            alert(`Failed to open: ${event.target.errorCode}`);
+        request.onsuccess = (event) => {
+            db = event.target.result;
+            console.log(db)
+        };
+    </script>
+</body>
+
+</html>

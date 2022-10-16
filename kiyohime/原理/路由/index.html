@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .app {
+            width: 100%;
+            height: 100%;
+            background-color: rgb(50, 116, 190);
+        }
+
+        .title {
+            margin: auto;
+            padding-top: 200px;
+            text-align: center;
+            color: rgb(160, 160, 160);
+            font-size: 30px;
+        }
+
+        ul {
+            text-align: center;
+            padding: 0;
+        }
+
+        ul>li {
+            display: inline-block;
+
+        }
+
+        a {
+            font-size: 20px;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="title">前端</div>
+        <ul>
+            <li><a href="#react">react</a></li>
+            <li><a href="#vue">vue</a></li>
+        </ul>
+    </div>
+    <script>
+        window.onhashchange = function (e) {
+            console.log('hash change', location.hash)
+        }
+    </script>
+</body>
+
+</html>

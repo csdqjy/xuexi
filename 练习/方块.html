@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .container {
+      height: 400px;
+      width: 370px;
+      border: 10px solid #333;
+      margin: 20px auto;
+    }
+    .game-bar {
+      width: 150px;
+      height: 400px;
+      float: left;
+    }
+    .game-map {
+      width: 200px;
+      height: 400px;
+      background: #ccc;
+      float: left;
+      border: 10px solid green;
+      position: relative;
+      top: -10px;
+      overflow: hidden;
+    }
+
+    .tetris {
+      height: 20px;
+      width: 20px;
+      background: red;
+      border: 1px solid #eee;
+      box-sizing: border-box;
+      position: absolute;
+    }
+    .fixed_tetris {
+      background: #333;
+      border: 1px solid #eee;
+      height: 20px;
+      width: 20px;
+      box-sizing: border-box;
+      position: absolute;
+    }
+    #level {
+      width: 20px;
+      text-align: center;
+    }
+    button {
+      margin: 20px;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="game-bar">
+        <div class="game-level">
+          难度： <input type="text" value="1" id="level" /> 只能1-9
+        </div>
+        <div class="integral">积分：<span class="num"></span></div>
+        <button class="btn1">暂停</button>
+        <button class="btn2">开始</button>
+        <button class="btn3">重新开始</button>
+      </div>
+      <div class="game-map">
+        <!-- <div class="tetris">
+        </div> -->
+      </div>
+    </div>
+
+    <script>
+      // 创建一个构造函数
+      class Tetris {
+        constructor() {
+          this.val = document.querySelector("#level").value; //记录上一个关卡
+          this.newColor = randomColor(); //随机色
+          this.whether = false; //判断是否通关
+          this.timer; //定时器返回值
+          this.step = 20; //每步移动的距离
+          this.sum = 0; //积分
+          this.sum1 = 0; //每次通关积分
+          this.row = 20; //行
+          this.col = 10; //列
+          this.model = [
+            //方块模型
+            [
+              [2, 0],
+              [2, 1],
+              [2, 2],
+              [1, 2]
+            ], //L
+            [
+              [1, 1],
+              [2, 1],
+              [2, 2],
+              [2, 3]
+            ], //左L
+            [
+              [2, 0],
+              [2, 1],
+              [2, 2],
+              [1, 1]
+            ], //凸
+            [
+              [2, 0],
+              [2, 1],
+              [3, 0],
+              [3, 1]
+            ], //田
+            [
+              [2, 0],
+              [2, 1],
+              [2, 2],
+              [2, 3]
+            ], //一
+            [
+              [2, 0],
+              [2, 1],
+              [3, 1],
+              [3, 2]
+            ], //Z
+            [
+              [2, 1],
+              [2, 2],
+              [3, 0],
+              [3, 1]
+            ] //左Z
+          ];
+          //标记16宫格
+          this.tetris = [];
+          this.tetrisX = 0;
+          this.tetrisY = 0;
+          //记录所以方块的位置
+          this.fixedModel = {};
+        }
+
+        //功能
+        init() {
+          this.createTeiris();
+          this.location();
+          this.KeyDown();
+          this.integral();
+          this.incident();
+        }
+
+        //创建俄罗斯方块
+        createTeiris() {
+          if (this.gameOver()) {
+            if (this.timer) {
+              clearInterval(this.timer);
+            }
+            alert("Game over");
+            return;
+          }
+          //确定当前使用的模型
+          this.tetris = this.model[randomNum(0, this.model.length - 1)];
+
+          //初始化16宫格
+          this.tetrisX = randomNum(0, 7);
+          this.tetrisY = -2;
+          for (var i = 0, len = this.tetris.length; i < len; i++) {
+            var node = document.createElement("div");
+            node.className = "tetris";
+            node.style.background = this.newColor;
+            document.querySelector(".game-map").appendChild(node);
+          }
+
+          this.randomRotate();
+          this.location();
+          this.autoMove(); //自动下落
+        }
+
+        //根据数据定位
+        location() {
+          this.border();
+          //拿到全部方块
+          this.tetrisBox = document.querySelectorAll(".tetris");
+          for (var i = 0, len = this.tetrisBox.length; i < len; i++) {
+            //单个方块
+            let tetris = this.tetrisBox[i];
+
+            //定位,16宫格的位置和方块在16宫格中的位置
+            tetris.style.left =
+              (this.tetrisX + this.tetris[i][1]) * this.step + "px";
+            tetris.style.top =
+              (this.tetrisY + this.tetris[i][0]) * this.step + "px";
+          }
+        }
+
+        //旋转方块
+        rotate() {
+          var cloneTetris = deepClone(this.tetris); //深拷贝
+
+          //旋转后的行 = 旋转前的列 旋转后的列 = 3 - 旋转前的行
+          for (var i = 0, len = cloneTetris.length; i < len; i++) {
+            //实现旋转
+            let num = cloneTetris[i][0]; //获取旋转前的行
+            cloneTetris[i][0] = cloneTetris[i][1];
+            cloneTetris[i][1] = 3 - num;
+          }
+          if (this.crash(this.tetrisX, this.tetrisY, cloneTetris)) {
+            return;
+          }
+
+          this.tetris = cloneTetris;
+
+          this.location();
+        }
+
+        //键盘事件
+        KeyDown(type) {
+          document.onkeydown = ev => {
+            var e = ev || event; //兼容
+            switch (e.keyCode) {
+              case 38: //上
+                this.rotate();
+                break;
+              case 39: //右
+                this.move(1, 0);
+                break;
+              case 40: //下
+                this.move(0, 1);
+                break;
+              case 37: //左
+                this.move(-1, 0);
+                break;
+            }
+          };
+        }
+        //方块移动
+        move(x, y) {
+          if (this.crash(this.tetrisX + x, this.tetrisY + y, this.tetris)) {
+            //底部触碰移动是由y轴移动
+            if (y !== 0) {
+              this.fixedTetris();
+            }
+            return;
+          }
+
+          //控制16宫格移动
+          this.tetrisX += x;
+          this.tetrisY += y;
+
+          this.location();
+        }
+        //边框
+        border() {
+          //定义不能越界
+          for (var i = 0, len = this.tetris.length; i < len; i++) {
+            //左边
+            if (this.tetris[i][1] + this.tetrisX < 0) {
+              this.tetrisX++;
+            }
+            //右边
+            if (this.tetris[i][1] + this.tetrisX >= this.col) {
+              this.tetrisX--;
+            }
+            //底部
+            if (this.tetris[i][0] + this.tetrisY >= this.row) {
+              this.tetrisY--;
+              this.fixedTetris();
+            }
+          }
+        }
+        //方块到底部
+        fixedTetris() {
+          //改变方块的样式并且不可以移动
+          var tetris = document.querySelectorAll(".tetris");
+          for (var i = 0, len = tetris.length; i < len; i++) {
+            //由于类名改变所以必须一次性获取len
+            //拿到单个方块
+            let node = tetris[i];
+            node.className = "fixed_tetris";
+            node.style.background = "#333"; //固定后变颜色
+            //把位置放入数组
+            this.fixedModel[
+              this.tetrisY +
+                this.tetris[i][0] +
+                "_" +
+                (this.tetrisX + this.tetris[i][1])
+            ] = tetris[i];
+          }
+          this.removeLine();
+          this.newColor = randomColor();
+          this.createTeiris();
+        }
+
+        //碰撞
+        crash(x, y, model) {
+          //判断移动中的方块将要移动的位置是否存在已固定的方块
+          for (var i = 0, len = model.length; i < len; i++) {
+            if (this.fixedModel[y + model[i][0] + "_" + (x + model[i][1])]) {
+              return true;
+            }
+          }
+          return false;
+        }
+        //删除填满方块的一行
+        removeLine() {
+          //在一行中每一列都存在方块的话就清理并增加积分
+          //遍历行
+          for (var i = 0; i < this.row; i++) {
+            var full = true;
+            //遍历列
+            for (var j = 0; j < this.col; j++) {
+              //如果当前行中有一列没有数据，就说明没铺满
+              if (!this.fixedModel[i + "_" + j]) {
+                full = false;
+                break;
+              }
+            }
+            if (full) {
+              //清理这一行
+              for (var x = 0; x < this.col; x++) {
+                document
+                  .querySelector(".game-map")
+                  .removeChild(this.fixedModel[i + "_" + x]);
+                this.fixedModel[i + "_" + x] = null;
+              }
+              this.downLine(i);
+              this.sum += 10; //积分+10
+              this.sum1 += 10; //积分+10
+              this.integral();
+            }
+          }
+        }
+        //让被清理之上的方块下落
+        downLine(line) {
+          //遍历被清理之上的所以行
+          for (var i = line - 1; i >= 0; i--) {
+            //遍历该行的列
+            for (var j = 0; j < this.col; j++) {
+              if (!this.fixedModel[i + "_" + j]) continue;
+              //存在数据
+              //行数+1
+              this.fixedModel[i + 1 + "_" + j] = this.fixedModel[i + "_" + j];
+              //让方块下落
+              this.fixedModel[i + 1 + "_" + j].style.top =
+                (i + 1) * this.step + "px";
+              //清理之前的方块
+              this.fixedModel[i + "_" + j] = null;
+            }
+          }
+        }
+
+        //自动下落
+        autoMove() {
+          var speed = this.level();
+          if (this.timer) {
+            clearInterval(this.timer);
+          }
+          this.timer = setInterval(() => {
+            this.move(0, 1);
+          }, speed);
+        }
+
+        //积分
+        integral() {
+          let num = document.querySelector(".num");
+          num.innerHTML = this.sum;
+        }
+
+        gameOver() {
+          //当第0行存在方块
+          for (var i = 0; i < this.col; i++) {
+            if (this.fixedModel["0_" + i]) {
+              return true;
+            }
+          }
+          return false;
+        }
+        //随机生成方向
+        randomRotate() {
+          switch (randomNum(1, 4)) {
+            case 2:
+              this.rotate();
+              break;
+            case 3:
+              this.rotate();
+              this.rotate();
+              break;
+            case 4:
+              this.rotate();
+              this.rotate();
+              this.rotate();
+              break;
+            default:
+              return;
+          }
+        }
+        //判断难度
+        level() {
+          var speed;
+          let lev = document.querySelector("#level");
+          if (this.sum1 == 100 && lev.value == 9) {
+            alert("恭喜您通关了");
+            clearInterval(this.timer);
+            document.onkeydown = null;
+            this.whether = true; //已通关
+          } else if (this.sum1 == 100) {
+            //每100分过关一次
+            this.sum1 = 0;
+            lev.value++;
+          }
+          var rule = /^[0-9]$/; //不能输入1-9以外的
+          if (!rule.test(lev.value)) {
+            alert("只能输入 1 到 9 ");
+            lev.value = this.val;
+          } else {
+            if (lev.value == 1) {
+              speed = 600;
+            }
+            if (lev.value == 2) {
+              speed = 500;
+            }
+            if (lev.value == 3) {
+              speed = 450;
+            }
+            if (lev.value == 4) {
+              speed = 400;
+            }
+            if (lev.value == 5) {
+              speed = 300;
+            }
+            if (lev.value == 6) {
+              speed = 200;
+            }
+            if (lev.value == 7) {
+              speed = 150;
+            }
+            if (lev.value == 8) {
+              speed = 100;
+            }
+            if (lev.value == 9) {
+              speed = 50;
+            }
+          }
+          this.val = lev.value;
+
+          return speed;
+        }
+        //事件
+        incident() {
+          var inp = document.querySelector("#level");
+          var btn1 = document.querySelector(".btn1");
+          var btn2 = document.querySelector(".btn2");
+          var btn3 = document.querySelector(".btn3");
+          inp.onblur = () => {
+            if (inp.value != this.val) {
+              this.sum1 = 0; //换关卡重新归零
+            }
+            this.level(); //失去焦点后判断
+          };
+          btn1.onclick = () => {
+            clearInterval(this.timer); //清除计时器
+            document.onkeydown = null; //键盘事件清空
+          };
+          btn2.onclick = () => {
+            this.autoMove(); //启动计时器
+            this.KeyDown(); //启动键盘事件
+            if (this.gameOver() || this.whether) {
+              this.startAgain();
+            }
+          };
+          btn3.onclick = () => {
+            this.startAgain();
+          };
+        }
+        startAgain() {
+          for (var i = 0; i < this.row; i++) {
+            for (var j = 0; j < this.col; j++) {
+              this.fixedModel[i + "_" + j] = null; //清空所有数据
+            }
+          }
+          document.querySelector(".game-map").innerHTML = ""; //清空节点
+          this.createTeiris(); //重新启动
+          this.sum = 0;
+          this.sum1 = 0;
+          this.whether = false;
+          this.integral();
+        }
+      }
+
+      //封装一个深拷贝的方法
+      function deepClone(obj) {
+        var _obj = JSON.stringify(obj),
+          cloneObj = JSON.parse(_obj);
+        return cloneObj;
+      }
+      //封装随机数
+      function randomNum(min, max) {
+        var tmp = max - min + 1;
+        return parseInt(Math.random() * tmp) + min;
+      }
+      //随机颜色
+      function randomColor() {
+        var color = [
+          "red",
+          "blue",
+          "green",
+          "yellow",
+          "#00FFFF",
+          "#930093",
+          "#F80000",
+          "#984B4B"
+        ];
+        return color[randomNum(0, color.length - 1)];
+      }
+
+      new Tetris().init();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <canvas id='drawing' width="400px" height="400px"></canvas>
+    <!-- <script>
+        // let drawing = document.getElementById("drawing");
+
+        // // 确保浏览器支持<canvas>
+        // if (drawing.getContext) {
+        //     let context = drawing.getContext("2d");
+
+        //     /*
+        //      * 引自MDN文档
+        //      */
+
+        //     // 绘制红色矩形
+        //     context.fillStyle = "#ff0000";
+        //     context.fillRect(10, 10, 50, 50);
+
+        //     // 绘制半透明蓝色矩形
+        //     context.fillStyle = "rgba(0,0,255,0.5)";
+        //     context.fillRect(30, 30, 50, 50);
+        // }
+
+        let drawing = document.getElementById("drawing");
+
+        // 确保浏览器支持<canvas>
+        // if (drawing.getContext) {
+        //     let context = drawing.getContext("2d");
+
+        //     // 创建路径
+        //     context.beginPath();
+
+        //     // 绘制外圆
+        //     context.arc(100, 100, 99, 0, 2 * Math.PI, false);
+        //     // // 绘制内圆
+        //     context.moveTo(194, 100);
+        //     context.arc(100, 100, 94, 0, 2 * Math.PI, false);
+
+        //     // // 绘制分针
+        //     context.moveTo(100, 100);
+        //     context.lineTo(100, 15);
+
+        //     // 绘制时针
+        //     context.moveTo(100, 100);
+        //     context.lineTo(35, 100);
+
+        //     // 描画路径
+        //     context.stroke();
+        // }
+
+        // if (drawing.getContext) {
+        //     let context = drawing.getContext("2d");
+
+        //     // 创建路径
+        //     context.beginPath();
+
+        //     context.moveTo(50, 50); // 创建开始点
+        //     // context.arcTo(100, 10, 150, 70, 50); // 创建弧
+        //     context.bezierCurveTo(100, 0, 150, 100, 200, 10)
+
+        //     // 描画路径
+        //     context.stroke();
+        // }
+
+        // if (drawing.getContext) {
+        //     let context = drawing.getContext("2d");
+
+        //     // 创建路径
+        //     context.beginPath();
+
+        //     context.arc(100, 100, 99, 0, 2 * Math.PI, false)
+
+        //     context.moveTo(194, 100)
+
+        //     context.arc(100, 100, 94, 0, 2 * Math.PI, false)
+
+        //     context.moveTo(100, 100)
+        //     context.lineTo(100, 10)
+
+        //     context.moveTo(100, 100)
+        //     context.lineTo(180, 100)
+
+        //     context.font = 'bold 14px Arial'
+        //     context.textAlign = 'center'
+        //     context.textBaseLine = 'middle'
+
+        //     context.fillText('12', 100, 20)
+        //     context.fillText('12', 180, 105)
+
+
+        //     context.stroke()
+        // }
+
+
+        // 确保浏览器支持<canvas>
+        if (drawing.getContext) {
+            let context = drawing.getContext("2d");
+
+            // 创建路径
+            context.beginPath();
+
+            context.translate(100, 100);
+
+            // 绘制外圆
+            context.arc(0, 0, 99, 0, 2 * Math.PI, false);
+
+            // 绘制内圆
+            context.moveTo(94, 0);
+            context.arc(0, 0, 94, 0, 2 * Math.PI, false);
+
+            // 移动原点到表盘中心
+
+            // 绘制分针
+            context.moveTo(0, 0);
+            context.lineTo(0, -85);
+
+            // 绘制时针
+            context.moveTo(0, 0);
+            context.lineTo(-65, 0);
+
+            // 描画路径
+            context.stroke();
+
+            // // 渐变
+            // let gradient = context.createLinearGradient(30, 30, 70, 70);
+            // gradient.addColorStop(0, "white");
+            // gradient.addColorStop(1, "black");
+
+            // context.fillStyle = gradient;
+            // context.fillRect(30, 30, 50, 50);
+
+            let gradient = context.createRadialGradient(55, 55, 10, 55, 55, 30);
+            gradient.addColorStop(0, "white");
+            gradient.addColorStop(1, "black");
+            // 绘制渐变矩形
+            context.fillStyle = gradient;
+            context.fillRect(30, 30, 50, 50);
+        }
+    </script> -->
+    <script>
+        let drawing = document.getElementById("drawing");
+
+        // 确保浏览器支持<canvas>
+        if (drawing.getContext) {
+
+            let gl = drawing.getContext("webgl", {
+                alpha: false
+            });
+            if (gl) {
+                // 使用WebGL
+                gl.clearColor(1, 1, 1, 1); // 黑色
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                gl.viewport(0, 0, drawing.width, drawing.height);
+
+                let buffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0.5, 1]), gl.STATIC_DRAW);
+            }
+        }
+
+        function maxSeriesLength(str) {
+            const arrMax = [0];
+            str.replace(/(.)\1*/g, (match) => {
+                const {
+                    length
+                } = match
+                console.log(match, match.length)
+                return arrMax.push(length)
+            });
+            console.log(arrMax)
+            return Math.max(...arrMax);
+        }
+        console.log(maxSeriesLength("aabbbbaaabbbccdd"));
+    </script>
+</body>
+
+</html>

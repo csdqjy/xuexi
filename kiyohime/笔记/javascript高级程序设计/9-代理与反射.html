@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        //====> 1.1 创建空代理
+        const target = {
+            id: 'target'
+        };
+
+        const handler = {};
+
+        const proxy = new Proxy(target, handler);
+
+        // id属性会访问同一个值
+        console.log(target.id); // target
+        console.log(proxy.id); // target
+
+        // 给目标属性赋值会反映在两个对象上
+        // 因为两个对象访问的是同一个值
+        target.id = 'foo';
+        console.log(target.id); // foo
+        console.log(proxy.id); // foo
+
+        // 给代理属性赋值会反映在两个对象上
+        // 因为这个赋值会转移到目标对象
+        proxy.id = 'bar';
+        console.log(target.id); // bar
+        console.log(proxy.id); // bar
+
+        // hasOwnProperty()方法在两个地方
+        // 都会应用到目标对象
+        console.log(target.hasOwnProperty('id')); // true
+        console.log(proxy.hasOwnProperty('id')); // true
+
+        // Proxy.prototype是undefined
+        // 因此不能使用instanceof操作符
+        console.log(
+            target instanceof Proxy); // TypeError: Function has non-object prototype 'undefined' in instanceof check
+        console.log(
+            proxy instanceof Proxy); // TypeError: Function has non-object prototype 'undefined' in instanceof check
+
+        // 严格相等可以用来区分代理和目标
+        console.log(target === proxy); // false
+
+        //====> 1.2 定义捕获器
+        const target = {
+            foo: 'bar'
+        };
+
+        const handler = {
+            // 捕获器在处理程序对象中以方法名为键
+            get() {
+                return 'handler override';
+            }
+        };
+
+        const proxy = new Proxy(target, handler);
+
+        /////
+
+        const target = {
+            foo: 'bar'
+        };
+
+        const handler = {
+            // 捕获器在处理程序对象中以方法名为键
+            get() {
+                return 'handler override';
+            }
+        };
+
+        const proxy = new Proxy(target, handler);
+
+        console.log(target.foo); // bar
+        console.log(proxy.foo); // handler override
+
+        console.log(target['foo']); // bar
+        console.log(proxy['foo']); // handler override
+
+        console.log(Object.create(target)['foo']); // bar
+        console.log(Object.create(proxy)['foo']); // handler override
+
+        //====> 捕获器参数和反射API
+        const target = {
+            foo: 'bar'
+        };
+
+        const handler = {
+            get(trapTarget, property, receiver) {
+                console.log(trapTarget === target);
+                console.log(property);
+                console.log(receiver === proxy);
+            }
+        };
+
+        const proxy = new Proxy(target, handler);
+
+        proxy.foo;
+        // true
+        // foo
+        // true
+
+        //////
+
+        const target = {
+            foo: 'bar'
+        };
+
+        const handler = {
+            get(trapTarget, property, receiver) {
+                return trapTarget[property];
+            }
+        };
+
+        const proxy = new Proxy(target, handler);
+
+        console.log(proxy.foo); // bar
+        console.log(target.foo); // bar
+
+        //////
+
+        const target = {
+            foo: 'bar'
+        };
+
+        const handler = {
+            get() {
+                return Reflect.get(...arguments);
+            }
+        };
+
+        const proxy = new Proxy(target, handler);
+
+        console.log(proxy.foo); // bar
+        console.log(target.foo); // bar
+
+        //////
+
+        const target = {
+            foo: 'bar'
+        };
+
+        const handler = {
+            get: Reflect.get
+        };
+
+        const proxy = new Proxy(target, handler);
+
+        console.log(proxy.foo); // bar
+        console.log(target.foo); // bar
+
+        ////// 
+
+        const target = {
+            foo: 'bar'
+        };
+
+        const proxy = new Proxy(target, Reflect);
+
+        console.log(proxy.foo); // bar
+        console.log(target.foo); // bar
+
+        //////
+
+        const target = {
+            foo: 'bar',
+            baz: 'qux'
+        };
+
+        const handler = {
+            get(trapTarget, property, receiver) {
+                let decoration = '';
+                if (property === 'foo') {
+                    decoration = '!!!';
+                }
+
+                return Reflect.get(...arguments) + decoration;
+            }
+        };
+
+        const proxy = new Proxy(target, handler);
+
+        console.log(proxy.foo); // bar!!!
+        console.log(target.foo); // bar
+
+        console.log(proxy.baz); // qux
+        console.log(target.baz); // qux
+
+        //====> 捕获器不变式
+        const target = {};
+        Object.defineProperty(target, 'foo', {
+            configurable: false,
+            writable: false,
+            value: 'bar'
+        });
+
+        const handler = {
+            get() {
+                return 'qux';
+            }
+        };
+
+        const proxy = new Proxy(target, handler);
+
+        console.log(proxy.foo);
+        // TypeError
+
+        //====> 可撤销代理
+        const target = {
+            foo: 'bar'
+        };
+
+        const handler = {
+            get() {
+                return 'intercepted';
+            }
+        };
+
+        const {
+            proxy,
+            revoke
+        } = Proxy.revocable(target, handler);
+
+        console.log(proxy.foo); // intercepted
+        console.log(target.foo); // bar
+
+        revoke();
+
+        console.log(proxy.foo); // TypeError
+
+        //====> 代理另一个代理
+        const target = {
+            foo: 'bar'
+        };
+
+        const firstProxy = new Proxy(target, {
+            get() {
+                console.log('first proxy');
+                return Reflect.get(...arguments);
+            }
+        });
+
+        const secondProxy = new Proxy(firstProxy, {
+            get() {
+                console.log('second proxy');
+                return Reflect.get(...arguments);
+            }
+        });
+
+        console.log(secondProxy.foo);
+        // second proxy
+        // first proxy
+        // bar
+
+        //====> 代理的问题与不足
+        const target = {
+            thisValEqualsProxy() {
+                return this === proxy;
+            }
+        }
+
+        const proxy = new Proxy(target, {});
+
+        console.log(target.thisValEqualsProxy()); // false
+        console.log(proxy.thisValEqualsProxy()); // true
+
+        //====> get()
+        const myTarget = {};
+
+        const proxy = new Proxy(myTarget, {
+            get(target, property, receiver) {
+                console.log('get()');
+                return Reflect.get(...arguments)
+            }
+        });
+
+        proxy.foo;
+        // get()
+
+        //====> 跟踪属性访问
+        const user = {
+            name: 'Jake'
+        };
+
+        const proxy = new Proxy(user, {
+            get(target, property, receiver) {
+                console.log(`Getting ${property}`);
+
+                return Reflect.get(...arguments);
+            },
+            set(target, property, value, receiver) {
+                console.log(`Setting ${property}=${value}`);
+
+                return Reflect.set(...arguments);
+            }
+        });
+
+        proxy.name; // Getting name
+        proxy.age = 27; // Setting age=27
+
+        //====> 隐藏属性
+        const hiddenProperties = ['foo', 'bar'];
+        const targetObject = {
+            foo: 1,
+            bar: 2,
+            baz: 3
+        };
+        const proxy = new Proxy(targetObject, {
+            get(target, property) {
+                if (hiddenProperties.includes(property)) {
+                    return undefined;
+                } else {
+                    return Reflect.get(...arguments);
+                }
+            },
+            has(target, property) {
+                if (hiddenProperties.includes(property)) {
+                    return false;
+                } else {
+                    return Reflect.has(...arguments);
+                }
+            }
+        });
+
+        // get()
+        console.log(proxy.foo); // undefined
+        console.log(proxy.bar); // undefined
+        console.log(proxy.baz); // 3
+
+        // has()
+        console.log('foo' in proxy); // false
+        console.log('bar' in proxy); // false
+        console.log('baz' in proxy); // true
+
+        //====> 属性验证
+        const target = {
+            onlyNumbersGoHere: 0
+        };
+
+        const proxy = new Proxy(target, {
+            set(target, property, value) {
+                if (typeof value !== 'number') {
+                    return false;
+                } else {
+                    return Reflect.set(...arguments);
+                }
+            }
+        });
+
+        proxy.onlyNumbersGoHere = 1;
+        console.log(proxy.onlyNumbersGoHere); // 1
+        proxy.onlyNumbersGoHere = '2';
+        console.log(proxy.onlyNumbersGoHere); // 1
+
+        //====> 函数与构造函数参数验证
+        function median(...nums) {
+            return nums.sort()[Math.floor(nums.length / 2)];
+        }
+
+        const proxy = new Proxy(median, {
+            apply(target, thisArg, argumentsList) {
+                for (const arg of argumentsList) {
+                    if (typeof arg !== 'number') {
+                        throw 'Non-number argument provided';
+                    }
+                }
+                return Reflect.apply(...arguments);
+            }
+        });
+
+        console.log(proxy(4, 7, 1)); // 4
+        console.log(proxy(4, '7', 1));
+        // Error: Non-number argument provided
+        /////
+        class User {
+            constructor(id) {
+                this.id_ = id;
+            }
+        }
+
+        const proxy = new Proxy(User, {
+            construct(target, argumentsList, newTarget) {
+                if (argumentsList[0] === undefined) {
+                    throw 'User cannot be instantiated without id';
+                } else {
+                    return Reflect.construct(...arguments);
+                }
+            }
+        });
+
+        new proxy(1);
+
+        new proxy();
+        // Error: User cannot be instantiated without id
+        //====> 数据绑定与可观察对象
+        const userList = [];
+
+        class User {
+            constructor(name) {
+                this.name_ = name;
+            }
+        }
+
+        const proxy = new Proxy(User, {
+            construct() {
+                const newUser = Reflect.construct(...arguments);
+                userList.push(newUser);
+                return newUser;
+            }
+        });
+
+        new proxy('John');
+        new proxy('Jacob');
+        new proxy('Jingleheimerschmidt');
+
+        console.log(userList); // [User {}, User {}, User{}]
+        ///////
+        const userList = [];
+
+        function emit(newValue) {
+            console.log(newValue);
+        }
+
+        const proxy = new Proxy(userList, {
+            set(target, property, value, receiver) {
+                const result = Reflect.set(...arguments);
+                if (result) {
+                    emit(Reflect.get(target, property, receiver));
+                }
+                return result;
+            }
+        });
+
+        proxy.push('John');
+        // John
+        proxy.push('Jacob');
+        // Jacob
+    </script>
+</body>
+
+</html>
+
+/pages/landing_template/pages/index/index
+/pages/landing_template/pages/index/index

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .app {
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            padding-top: 300px;
+        }
+
+        .btn {
+            width: 200px;
+            height: 50px;
+            margin: 0 auto;
+            color: #fff;
+            font-size: 30px;
+            line-height: 50px;
+            text-align: center;
+            background-color: darksalmon;
+            cursor: pointer;
+        }
+
+        .hb {
+            box-sizing: border-box;
+            position: absolute;
+            top: -80px;
+            left: 0;
+            width: 60px;
+            height: 80px;
+            padding: 20px;
+            background-color: crimson;
+            transition: opacity 1s linear;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="btn">开始</div>
+        <!-- <div class="hb"></div> -->
+    </div>
+
+    <script>
+        const app = document.querySelector('.app')
+        const btn = document.querySelector('.btn')
+        const w = document.body.offsetWidth
+        const h = document.body.offsetHeight
+        let num = 50
+        let ran = 0
+        console.log(w)
+
+        btn.onclick = clickBtn
+
+        function clickBtn(e) {
+            this.style.display = 'none'
+            const inter = setInterval(() => {
+                num--
+                inApp()
+                if (num == 0) {
+                    clearInterval(inter)
+                }
+            }, 300);
+        }
+        for (let i = 0; i < 100; i++) {
+            console.log(Math.floor(Math.random() * (80 - 70 + 1) + 70))
+        }
+
+        function inApp() {
+            const hb = document.createElement('DIV')
+            let top = -80
+            let flag = true
+            let ary = []
+
+            if (ran - 10 <= 100 || ran + 150 > w) {
+                ary.push(Math.floor(Math.random() * ((w - 60) - 80 + 1) + 80))
+            } else {
+                ary.push(Math.floor(Math.random() * ((ran - 10) - 0 + 1) + 0))
+                ary.push(Math.floor(Math.random() * ((w - 60) - (ran + 70) + 1) + (ran + 70)))
+            }
+            ran = ary[Math.floor(Math.random() * ((ary.length - 1) - 0 + 1) + 0)]
+
+            hb.className = 'hb'
+            hb.style.left = ran + 'px'
+            hb.style.top = '-80px'
+
+            app.appendChild(hb)
+
+            let inter = setInterval(() => {
+                top = top + 1
+                hb.style.top = top + 'px'
+                if (top == h - 80) {
+                    hb.style.opacity = '0'
+                    setTimeout(() => {
+                        app.removeChild(hb)
+                    }, 1000);
+                    clearInterval(inter)
+                }
+            }, 3);
+            hb.onclick = function () {
+                if (flag) {
+                    flag = false
+                    hb.style.opacity = '0'
+                    setTimeout(() => {
+                        app.removeChild(hb)
+                    }, 1000);
+                    clearInterval(inter)
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

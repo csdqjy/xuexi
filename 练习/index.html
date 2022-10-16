@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        html {
+            height: 200vh;
+        }
+
+        .box {
+            position: relative;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            width: 100px;
+            height: 50px;
+            /* border: 1px solid rgb(39, 207, 236); */
+            background-color: rgba(187, 187, 187, 0.445);
+            cursor: pointer;
+            transition: all 1s;
+        }
+
+        .slider {
+            width: 30px;
+            height: 30px;
+            margin-left: 0;
+            background-color: rgb(255, 255, 255);
+            transition: all 1s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="slider"></div>
+    </div>
+    <script>
+        let box = document.querySelector(".box");
+        let slider = document.querySelector(".slider");
+        let buttonState = false;
+        box.addEventListener('click', () => {
+            if (!buttonState) {
+                slider.style.marginLeft = "70px"
+                box.style.backgroundColor = 'rgb(50, 204, 88)'
+                buttonState = true
+            } else {
+                slider.style.marginLeft = "0"
+                box.style.backgroundColor = 'rgba(187, 187, 187, 0.445)'
+                buttonState = false
+            }
+        })
+    </script>
+</body>
+
+</html>

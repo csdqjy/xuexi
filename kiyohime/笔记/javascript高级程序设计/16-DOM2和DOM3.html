@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div.box {
+            background-color: blue;
+            width: 100px;
+            height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="div1" class="div1">
+        <p></p>
+        <img src="" alt="">
+        <ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+        <ol>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ol>
+        <p id="p1"><b>Hello</b> world!</p>
+    </div>
+    <script>
+        let div = document.getElementById("div1");
+        let iterator = document.createNodeIterator(div, NodeFilter.SHOW_ELEMENT,
+            null, false);
+
+        let node = iterator.nextNode();
+        while (node !== null) {
+            console.log(node.tagName); // 输出标签名
+            node = iterator.nextNode();
+        }
+
+        // let range1 = document.createRange(),
+        //     range2 = document.createRange(),
+        //     p1 = document.getElementById("p1");
+        // range1.selectNode(p1);
+        // range2.selectNodeContents(p1);
+        // console.log(range1, range2)
+
+        // let p1 = document.getElementById("p1"),
+        //     helloNode = p1.firstChild.firstChild,
+        //     worldNode = p1.lastChild
+
+        // let range = document.createRange();
+        // range.setStart(helloNode, 2);
+        // range.setEnd(worldNode, 3);
+
+        // console.log(range)
+
+        let p1 = document.getElementById("p1"),
+            helloNode = p1.firstChild.firstChild,
+            worldNode = p1.lastChild,
+            range = document.createRange();
+
+        range.selectNode(helloNode);
+        let span = document.createElement("span");
+        span.style.backgroundColor = "yellow";
+        range.surroundContents(span);
+    </script>
+</body>
+
+</html>

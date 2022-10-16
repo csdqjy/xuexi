@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100vh;
+        }
+
+
+        .box {
+            display: flex;
+            align-items: center;
+            width: 400px;
+            height: 100px;
+            margin: auto;
+            margin-bottom: 100px;
+            padding: 0 10px;
+        }
+
+        .box1 {
+            border: 1px solid rgba(100, 100, 100, 1);
+        }
+
+        .box2 {
+            border: 1px solid rgba(76, 62, 199, 1);
+        }
+
+        .box>div {
+            box-sizing: border-box;
+            width: 50px;
+            height: 60px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .box1>div {
+            border: 1px solid rgb(91, 167, 41);
+        }
+
+        .box2>div {
+            border: 1px solid rgb(177, 119, 31);
+        }
+
+        .box1 :nth-last-child(1) {
+            margin: 0;
+        }
+
+        .box .temp_black {
+            background: rgba(100, 100, 100, 0.7);
+            border: 0;
+        }
+
+        .box .temp_white {
+            background: rgba(255, 255, 255, 1);
+            border: 0;
+        }
+
+        .father {
+            padding-top: 100px;
+            box-sizing: border-box;
+        }
+
+        .absolute {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="father">
+        <div class="box1 box">
+            <div class="child"></div>
+            <div class="child"></div>
+        </div>
+        <div class="box2 box">
+            <div class="child"></div>
+            <div class="child"></div>
+        </div>
+    </div>
+    <script>
+        let body = document.querySelector("body");
+        let target = null;
+        let sibling = null;
+        let temp_white = null;
+        let temp_black = null;
+        let add = true;
+        let isMove = false;
+        let inSibling = false;
+        let x = null;
+        let y = null;
+        let flag = true;
+
+        let down = (e) => {
+            if (flag = true) {
+                flag = false;
+                if (e.target.className === "child") {
+                    target = e.target;
+                    x = e.pageX - target.offsetLeft;
+                    y = e.pageY - target.offsetTop;
+                    target.classList.add("absolute");
+                    target.style["left"] = e.pageX - x + "px";
+                    target.style["top"] = e.pageY - y + "px";
+                    isMove = true;
+                    temp_white = document.createElement("DIV")
+                    temp_white.className = "temp_white";
+                    target.parentNode.insertBefore(temp_white, target);
+                    body.addEventListener("mousemove", move);
+                }
+            }
+        };
+
+        let move = (e) => {
+            if (isMove) {
+                target.style["left"] = e.pageX - x + "px";
+                target.style["top"] = e.pageY - y + "px";
+                target.style.zIndex = 999;
+
+                if (target.parentNode.className.includes("box1")) {
+                    sibling = target.parentNode.nextElementSibling;
+                } else {
+                    sibling = target.parentNode.previousElementSibling;
+                };
+                let isInSibling = e.pageX > sibling.offsetLeft &&
+                    e.pageY > sibling.offsetTop &&
+                    e.pageX < sibling.offsetLeft + sibling.offsetWidth &&
+                    e.pageY < sibling.offsetTop + sibling.offsetHeight;
+
+                if (isInSibling && add) {
+                    temp_black = document.createElement("DIV");
+                    temp_black.className = "temp_black";
+                    sibling.appendChild(temp_black);
+                    add = false;
+                    inSibling = true;
+                }
+
+                if (!isInSibling && temp_black !== null) {
+                    sibling.removeChild(temp_black);
+                    temp_black = null;
+                    add = true;
+                    inSibling = false;
+                }
+            }
+        };
+
+        let up = (e) => {
+            if (e.target === target) {
+                if (inSibling === true) {
+                    let child = document.createElement("DIV");
+                    child.className = "child";
+                    sibling.removeChild(temp_black)
+                    sibling.appendChild(child)
+                    target.parentNode.removeChild(temp_white);
+                    target.remove();
+                    // body.removeEventListener("mousemove", move);
+                } else {
+                    target.classList.remove("absolute");
+                    target.style.zIndex = "auto";
+                    target.parentNode.removeChild(temp_white);
+                }
+                target = null;
+                temp_white = null;
+                temp_black = null;
+                sibling = null;
+                x = null;
+                y = null;
+                inSibling = false;
+                add = true;
+                isMove = false;
+            };
+            flag = true;
+        }
+
+        body.addEventListener("mousedown", down);
+        body.addEventListener("mouseup", up);
+    </script>
+</body>
+
+</html>

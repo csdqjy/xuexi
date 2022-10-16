@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="mediaplayer">
+        <div class="video">
+            <video id="player" src="./Video/1.mp4" poster="./Video/1.png" width="300" height="200">
+                Video player not available.
+            </video>
+        </div>
+        <div class="controls">
+            <input type="button" value="Play" id="video-btn" />
+            <span id="curtime">0</span>/<span id="duration">0</span>
+        </div>
+    </div>
+    <script>
+        // 取得元素的引用
+        let player = document.getElementById("player"),
+            btn = document.getElementById("video-btn"),
+            urtime = document.getElementById("curtime"),
+            duration = document.getElementById("duration");
+        // 更新时长
+        player.oncanplay = function () {
+            duration.innerHTML = Math.floor(player.duration);
+        }
+        // 为按钮添加事件处理程序
+        btn.addEventListener("click", (event) => {
+            if (player.paused) {
+                player.play();
+                btn.value = "Pause";
+            } else {
+                player.pause();
+                btn.value = "Play";
+            }
+        });
+
+        // 周期性更新当前时间
+        setInterval(() => {
+            curtime.innerHTML = Math.floor(player.currentTime);
+        }, 250);
+
+
+        // =============== 检测编解码器
+
+        let audio = document.getElementById("audio-player");
+        // 很可能是"maybe"
+        if (audio.canPlayType("audio/mpeg")) {
+            // 执行某些操作
+        }
+        // 可能是"probably"
+        if (audio.canPlayType("audio/ogg; codecs=\"vorbis\"")) {
+            // 执行某些操作
+        }
+    </script>
+</body>
+
+</html>

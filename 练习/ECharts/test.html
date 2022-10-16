@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>ECharts</title>
+    <!-- 引入刚刚下载的 ECharts 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.1/dist/echarts.min.js"></script>
+
+</head>
+
+<body>
+    <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        let data = [{
+                name: '队列1',
+                value: ['集合1', 0, 20, 2, 0], // 第一项是x轴集合，第二项是固定0，第三项是数据，第四项是集合共有几项，第五项是该数据是集合的索引
+                itemStyle: {
+                    normal: {
+                        color: '#75d874'
+                    }
+                }
+            },
+            {
+                name: '队列2',
+                value: ['集合1', 0, 50, 2, 1]
+            },
+            {
+                name: '队列2',
+                value: ['集合2', 0, 60, 4, 0]
+            },
+            {
+                name: '队列3',
+                value: ['集合2', 0, 20, 4, 1]
+            },
+            {
+                name: '队列4',
+                value: ['集合2', 0, 90, 4, 2]
+            },
+            {
+                name: '队列7',
+                value: ['集合2', 0, 60, 4, 3]
+            },
+            {
+                name: '队列7',
+                value: ['集合3', 0, 20, 2, 0]
+            },
+            {
+                name: '队列8',
+                value: ['集合3', 0, 90, 2, 1]
+            },
+        ]
+
+        // 指定图表的配置项和数据
+        var option = {
+            legend: {},
+            tooltip: {},
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                // type: "value"
+            },
+            series: [{
+                type: 'custom',
+                encode: {
+                    x: 0,
+                    y: [1, 2],
+                    label: 0
+                },
+                renderItem: function (params, api) {
+                    const categoryIndex = api.value(0);
+                    const start = api.coord([categoryIndex, api.value(1)]);
+                    const end = api.coord([categoryIndex, api.value(2)]);
+                    const size = api.size([0, api.value(1)])[0] // 每个x轴集合的宽度大小
+                    const num = api.value(3); // 集合个数
+                    const width = size * 0.8 / num; // 每项柱形图的宽
+                    const margin = (size - (num * width)) / num / 2 // 柱形图之间的间隔
+                    const start_x = start[0] - (size / 2) // 每个x轴集合的开始坐标
+                    const margin_sum = api.value(4) * 2 * margin // 每项柱形图前margin的总长
+                    const item_sum = width * api.value(4) // 每项柱形图前其他柱形图的总长
+                    const x = start_x + margin + margin_sum + item_sum // 该项柱形图的x坐标
+
+                    const rectShape = echarts.graphic.clipRectByRect({
+                        x: x,
+                        y: end[1],
+                        width: width,
+                        height: start[1] - end[1]
+                    }, {
+                        x: params.coordSys.x,
+                        y: params.coordSys.y,
+                        width: params.coordSys.width,
+                        height: params.coordSys.height
+                    });
+
+                    return rectShape && {
+                        type: 'rect',
+                        shape: rectShape,
+                        style: api.style()
+                    };
+                },
+                data: data
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+
+        let obj = {
+            data: {
+                data: 1
+            }
+        }
+        let a;
+        let b = a && a.c ? '1' : '2'
+        console.log(b)
+
+
+        let {ff='1'} = undefined
+        console.log(ff)
+    </script>
+</body>
+
+</html>

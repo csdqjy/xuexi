@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbol</title>
+</head>
+
+<body>
+    <script>
+        // Symbol
+        let sym1 = Symbol('name')
+        let sym2 = Symbol('name')
+        console.log(sym1 === sym2)
+
+        let sym3 = Symbol.for('sym')
+        let sym4 = Symbol.for('sym')
+        console.log(sym3 === sym4)
+
+        let obj = {
+            [sym1]: 1,
+            [sym2]: 2
+        }
+
+        console.log(obj)
+    </script>
+</body>
+
+</html>

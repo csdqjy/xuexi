@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .a {
+            height: 30px;
+        }
+
+        .b {
+            /* min-height: 100vh; */
+            overflow: scroll
+        }
+
+        #ifr {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="a"></div>
+    <iframe src="./iframe_.html" id="ifr" scrolling='yes' frameborder="0" width="100%" height="900px"></iframe>
+</body>
+
+</html>

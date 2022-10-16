@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            position: relative;
+            height: 100vh;
+        }
+
+        .app {
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            padding-top: 200px;
+        }
+
+        .dl {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            visibility: hidden;
+            z-index: 1;
+            transition: all 0.5s;
+        }
+
+        .div {
+            width: 200px;
+            height: 300px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto;
+            background-color: cyan;
+            z-index: 2;
+        }
+
+        .bk {
+            background-color: rgba(100, 100, 100, 0.411);
+            width: 100vw;
+            height: 100vh;
+            transform: scale(0);
+            transition: all 0.5s;
+        }
+
+        .button {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto;
+            border-radius: 50%;
+            background-color: royalblue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <div class="dl">
+            <div class="bk">
+                <div class="div"></div>
+            </div>
+        </div>
+        <div class="button"></div>
+    </div>
+    <script>
+        let button = document.querySelector('.button');
+        let bk = document.querySelector('.bk');
+        let dl = document.querySelector('.bk');
+        button.onclick = function () {
+            dl.style['visibility'] = 'visible'
+            bk.style['transform'] = 'scale(1)'
+        }
+
+        bk.onclick = function (e) {
+            if(e.target.className==='bk'){
+                bk.style['transform'] = 'scale(0)'
+            }
+        }
+    </script>
+</body>
+
+</html>

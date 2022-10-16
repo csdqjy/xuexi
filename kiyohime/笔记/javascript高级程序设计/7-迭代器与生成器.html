@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>迭代器与生成器</title>
+</head>
+
+<body>
+
+    <script>
+        // 3
+        // 可迭代对象
+        // let arr = ['foo', 'bar'];
+        // // 迭代器工厂函数
+        // console.log(arr[Symbol.iterator]); // f values() { [native code] }
+        // // 迭代器
+        // let iter = arr[Symbol.iterator]();
+        // console.log(iter); // ArrayIterator {}
+        // // 执行迭代
+        // console.log(iter.next()); // { done: false, value: 'foo' }
+        // console.log(iter.next()); // { done: false, value: 'bar' }
+        // console.log(iter.next()); // { done: true, value: undefined } 
+
+
+        // 这个类实现了可迭代接口（Iterable）
+        // 调用默认的迭代器工厂函数会返回
+        // 一个实现迭代器接口（Iterator）的迭代器对象
+        // class Foo {
+
+        //     [Symbol.iterator]() {
+        //         return {
+        //             next() {
+        //                 return {
+        //                     done: false,
+        //                     value: 'foo'
+        //                 };
+        //             }
+        //         }
+        //     }
+        // }
+        // let f = new Foo();
+        // // 打印出实现了迭代器接口的对象
+        // console.log(f[Symbol.iterator]()); // { next: f() {} } 
+
+        // 4
+        // class Counter {
+        //     // Counter 的实例应该迭代 limit 次
+        //     constructor(limit) {
+        //         this.count = 1;
+        //         this.limit = limit;
+        //     }
+        //     next() {
+        //             if (this.count <= this.limit) {
+        //                 return {
+        //                     done: false,
+        //                     value: this.count++
+        //                 };
+        //             } else {
+        //                 return {
+        //                     done: true,
+        //                     value: undefined
+        //                 };
+        //             }
+        //         }
+        //         [Symbol.iterator]() {
+        //             return this;
+        //         }
+        // }
+        // let counter = new Counter(3);
+        // for (let i of counter) {
+        //     console.log(i);
+        // }
+        // 1
+        // 2
+        // 3 
+
+        // class Counter {
+        //     constructor(limit) {
+        //             this.limit = limit;
+        //         }
+        //         [Symbol.iterator]() {
+        //             let count = 1,
+        //                 limit = this.limit;
+        //             return {
+        //                 next() {
+        //                     if (count <= limit) {
+        //                         return {
+        //                             done: false,
+        //                             value: count++
+        //                         };
+        //                     } else {
+        //                         return {
+        //                             done: true
+        //                         };
+        //                     }
+        //                 },
+        //                 return () {
+        //                     console.log('Exiting early');
+        //                     return {
+        //                         done: true
+        //                     };
+        //                 }
+        //             };
+        //         }
+        // }
+        // let counter1 = new Counter(5);
+        // for (let i of counter1) {
+        //     if (i > 2) {
+        //         break;
+        //     }
+        //     console.log(i);
+        // }
+        // // 1
+        // // 2
+        // // Exiting early
+        // let counter2 = new Counter(5);
+        // try {
+        //     for (let i of counter2) {
+        //         if (i > 2) {
+        //             throw 'err';
+        //         }
+        //         console.log(i);
+        //     }
+        // } catch (e) {}
+        // // 1
+        // // 2
+        // // Exiting early
+        // let counter3 = new Counter(5);
+        // let [a, b] = counter3;
+        // // Exiting early 
+
+        //=================
+        // 生成器
+        // 1
+        //     // 生成器函数声明
+        //     function* generatorFn() {}
+        //     // 生成器函数表达式
+        //     let generatorFn = function* () {}
+        //     // 作为对象字面量方法的生成器函数
+        //     let foo = {
+        //         * generatorFn() {}
+        //     }
+        //     // 作为类实例方法的生成器函数
+        //     class Foo {
+        //         * generatorFn() {}
+        //     }
+        //     // 作为类静态方法的生成器函数
+        //     class Bar {
+        //         static * generatorFn() {}
+        //     }
+        // 
+        // function* generatorFn() {}
+        // const g = generatorFn();
+        // console.log(g); // generatorFn {<suspended>}
+        // console.log(g.next); // f next() { [native code] } 
+        // function* generatorFn() {}
+        // console.log(generatorFn);
+        // // f* generatorFn() {}
+        // console.log(generatorFn()[Symbol.iterator]);
+        // // f [Symbol.iterator]() {native code}
+        // console.log(generatorFn());
+        // // generatorFn {<suspended>}
+        // console.log(generatorFn()[Symbol.iterator]());
+        // // generatorFn {<suspended>}
+        // const g = generatorFn();
+        // console.log(g === g[Symbol.iterator]());
+        // // true 
+        // function* nTimes(n) {
+        //     while (n--) {
+        //         yield;
+        //     }
+        // }
+        // for (let _ of nTimes(5)) {
+        //     console.log("foo")
+        // }
+
+        // function* generatorFn(initial) {
+        //     console.log(initial);
+        //     console.log(yield);
+        //     console.log(yield);
+        // }
+        // let generatorObject = generatorFn('foo');
+        // generatorObject.next('bar'); // foo
+        // generatorObject.next('baz'); // baz
+        // generatorObject.next('qux'); // qux
+
+        class Node {
+            constructor(id) {
+                this.id = id;
+                this.neighbors = new Set();
+            }
+            connect(node) {
+                if (node !== this) {
+                    this.neighbors.add(node);
+                    node.neighbors.add(this);
+                }
+            }
+        }
+        class RandomGraph {
+            constructor(size) {
+                this.nodes = new Set(); 
+                // 创建节点
+                for (let i = 0; i < size; ++i) {
+                    this.nodes.add(new Node(i));// nodes类似于[new Node(i),new Node(i)]
+                }
+                // 随机连接节点
+                const threshold = 1 / size;
+                for (const x of this.nodes) {
+                    for (const y of this.nodes) {
+                        if (Math.random() < threshold) {
+                            x.connect(y);
+                        }
+                    }
+                }
+            }
+            // 这个方法仅用于调试
+            print() {
+                for (const node of this.nodes) {
+                    const ids = [...node.neighbors]
+                        .map((n) => n.id)
+                        .join(',');
+                    console.log(`${node.id}: ${ids}`);
+                }
+            }
+        }
+        const g = new RandomGraph(6);
+        g.print();
+        // 示例输出：
+        // 0: 2,3,5
+        // 1: 2,3,4,5
+        // 2: 1,3
+        // 3: 0,1,2,4
+        // 4: 2,3
+        // 5: 0,4 
+    </script>
+</body>
+
+</html>
