@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态坐标与下拉框</title>
+    <style>
+        .line {
+            margin: 20px 0;
+            border: 0.5px solid rgb(200, 200, 200);
+        }
+
+        .label {
+            margin-right: 10px;
+        }
+
+        .main p {
+            margin-left: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <p>输入需要生成的组件数据</p>
+        <textarea class="textarea" name="" id="" cols="50" rows="15"></textarea>
+        <button class="button">生成</button>
+    </header>
+    <div class="line"></div>
+    <main class="main"></main>
+
+    <script>
+        const RULE_TYPE = {
+            OBJECT: 'OBJECT',
+            ARRAY: 'ARRAY',
+            NUMBER: 'NUMBER',
+            STRING: 'STRING',
+            BOOLEAN: 'BOOLEAN'
+        }
+
+        const OPTION_ID_TYPE = {
+            1: 'AXIS',
+            2: 'SELECT',
+        }
+
+        const COMPONENT_TYPE = {
+            AXIS: 'AXIS',
+            SELECT: 'SELECT'
+        }
+
+        const AXIS_LIST = ['x', 'y', 'z']
+
+        window.onload = function () {
+            const button = document.querySelector('.button')
+            const textarea = document.querySelector('.textarea')
+            button.addEventListener('click', () => {
+                const option = getTextValue(textarea)
+
+                // 文本域内容部位object
+                if (!option) {
+                    alert('数据不是object类型对象')
+                    return
+                }
+
+                // 创建组件
+                createComponent(option)
+            })
+        }
+
+        // 创建组件方法
+        function createComponent(option) {
+            const {
+                id
+            } = option
+            // 根据id执行不同的渲染逻辑
+            switch (OPTION_ID_TYPE[id]) {
+                case COMPONENT_TYPE.AXIS: // 渲染坐标
+                    renderAxis(option)
+                    break
+                case COMPONENT_TYPE.SELECT: // 渲染下拉框
+                    renderSelect(option)
+                    break
+                default:
+                    alert('id不是有效的组件类型')
+            }
+        }
+
+        // 渲染坐标轴组件
+        function renderAxis(option) {
+            const {
+                name,
+                params
+            } = option
+
+            // 判断name是否合法
+            if (!checkRule(name, RULE_TYPE.STRING)) {
+                alert('name不是String类型或者为空')
+            }
+
+            // 判断params是否为Array
+            if (!checkRule(params, RULE_TYPE.ARRAY)) {
+                alert('params不是Array类型')
+            }
+
+            const main = document.querySelector('.main')
+            const axisBox = document.createElement('DIV') // 创建axisBox
+            const label = document.createElement('P') // 创建name
+            label.classList.add('label')
+            label.innerHTML = name
+            axisBox.appendChild(label) // 将name插入到axisBox
+
+            // 循环创建三个input
+            AXIS_LIST.forEach((item, index) => {
+                createAxisInput(params, axisBox, item, index)
+            })
+
+            // 将axisBox插入到main中
+            main.appendChild(axisBox)
+        }
+
+        // 创建坐标input
+        function createAxisInput(params, axisBox, item, index) {
+            const p = document.createElement('P')
+            const axis = document.createElement('INPUT')
+            p.innerHTML = item
+            axis.value = checkRule(params[index], RULE_TYPE.NUMBER) ? params[index] : 0
+
+            axis.addEventListener('blur', () => {
+                const value = axis.value
+                if (!checkRule(value, RULE_TYPE.NUMBER)) {
+                    axis.value = 0
+                }
+            })
+
+            p.appendChild(axis)
+            axisBox.appendChild(p)
+        }
+
+        // 渲染下拉框组件
+        function renderSelect(option) {
+            const {
+                name,
+                potions
+            } = option
+            // 判断name是否合法
+            if (!checkRule(name, RULE_TYPE.STRING)) {
+                alert('name不是String类型或者为空')
+            }
+
+            // 判断potions是否为Array
+            if (!checkRule(potions, RULE_TYPE.ARRAY)) {
+                alert('potions不是Array类型')
+            }
+
+            const main = document.querySelector('.main')
+            const selectBox = document.createElement('DIV') // 创建selectBox
+            const label = document.createElement('P') // 创建name
+            const select = document.createElement('SELECT') // 创建select
+            label.classList.add('label')
+            label.innerHTML = name
+            selectBox.appendChild(label) // 将name插入到selectBox
+
+            // 循环创建option
+            potions.forEach(item => {
+                // 只有string、number、boolean类型才渲染
+                if (checkRule(item, RULE_TYPE.NUMBER) ||
+                    checkRule(item, RULE_TYPE.STRING) ||
+                    checkRule(item, RULE_TYPE.BOOLEAN)
+                ) {
+                    createSelectOption(item, select)
+                }
+            })
+
+            selectBox.appendChild(select)
+            main.appendChild(selectBox)
+        }
+
+        // 创建select下拉框下的option
+        function createSelectOption(item, select) {
+            const option = document.createElement('OPTION')
+            option.value = item
+            option.innerHTML = item
+            select.appendChild(option)
+        }
+
+        // 获取文本域的内容
+        function getTextValue(input) {
+            try {
+                const value = input.value
+                const result = checkRule(value, RULE_TYPE.OBJECT) // 判断文本是否为object类型
+
+                if (!result) {
+                    return false
+                }
+
+                return JSON.parse(value)
+            } catch (err) {
+                alert('JSON数据不合法')
+                throw new Error(err)
+            }
+        }
+
+        // 类型校验
+        function checkRule(param, type) {
+            switch (type) {
+                case RULE_TYPE.OBJECT: // 'object'
+                    if (typeof param === 'string') {
+                        if (param[0] !== '{' && param[param.length - 1] !== '}') return false
+                    } else {
+                        return Object.prototype.toString.call(param) === '[object Object]'
+                    }
+                    break
+
+                case RULE_TYPE.ARRAY: // 'array'
+                    return Array.isArray(param)
+                    break
+
+                case RULE_TYPE.NUMBER: // 'number'
+                    if (typeof param === 'string') {
+                        if (Number.isNaN(Number(param))) return false
+                    } else if (typeof param !== 'number') {
+                        return false
+                    }
+                    break
+
+                case RULE_TYPE.STRING: // 'string'
+                    if (typeof param !== 'string' || param.length === 0) return false
+                    break
+
+                case RULE_TYPE.BOOLEAN: // 'boolean'
+                    if (typeof param !== 'boolean') return false
+                    break
+
+                default:
+            }
+
+            return true
+        }
+    </script>
+</body>
+
+</html>

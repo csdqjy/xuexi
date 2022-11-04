@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const obj = {}
+        obj.__proto__ = SDK.prototype
+
+        function SDK(token) {
+            obj.__proto__.token = token
+
+            return obj
+        }
+        const token = '1234'
+        const skd1 = new SDK(token)
+        const skd2 = new SDK()
+        console.log(skd1)
+        // console.log(skd1 instanceof SDK)
+        // console.log(skd2 === skd1, skd1.token === token, skd2.token === token)
+    </script>
+</body>
+
+</html>
